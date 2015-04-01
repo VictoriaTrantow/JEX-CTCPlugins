@@ -46,13 +46,13 @@ import function.plugin.mechanism.OutputMarker;
 		visible=true,
 		description="Quantify single-cell attributes from a point roi, mask overlay, segmentation overlay, and image."
 		)
-public class CTC_JEX_CTC_SingleCellQuantification extends JEXPlugin {
+public class CTC_SingleCellQuantification extends JEXPlugin {
 	
 	public static String[] binaryMeasures = new String[] { "AREA", "PERIMETER", "CIRCULARITY" };
 	public static String[] grayscaleMeasures = new String[] { "MEAN", "MEDIAN", "MIN", "MAX", "SUM", "STDDEV", "VARIANCE" };
 	
 	
-	public CTC_JEX_CTC_SingleCellQuantification()
+	public CTC_SingleCellQuantification()
 	{}
 	
 	/////////// Define Inputs ///////////
