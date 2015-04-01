@@ -13,7 +13,7 @@
 	
 	<name>JEX plugins for CTC Image Analysis</name>
 	<description>This is a project for segregating development of functions for CTC analysis from development of JEX</description>
-	<url>https://github.com/jaywarrick/JEX</url>
+	<url>https://github.com/jaywarrick/JEX-CTCPlugins</url>
 
 	<developers>
 		<developer>
