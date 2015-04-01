@@ -38,9 +38,9 @@ import function.plugin.mechanism.ParameterMarker;
 		visible=true,
 		description="Determine background noise, calculate threshold based on multiples of sigma, and create thresholded images."
 		)
-public class CTC_JEX_ThresholdBGNoise extends JEXPlugin {
+public class CTC_ThresholdBGNoise extends JEXPlugin {
 	
-	public CTC_JEX_ThresholdBGNoise()
+	public CTC_ThresholdBGNoise()
 	{}
 	
 	/////////// Define Inputs ///////////
