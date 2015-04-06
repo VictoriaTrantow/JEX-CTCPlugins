@@ -1,0 +1,53 @@
+package plugins;
+
+import Database.DBObjects.JEXEntry;
+import function.plugin.mechanism.JEXPlugin;
+
+@Plugin(
+	type = JEXPlugin.class,
+	name="CTC - Image Calculator,
+	menuPath="CTC Toolbox",
+	visible=true,
+	description="Perform pixel-to-pixel math on two images.")
+public class CTC_ImageCalculator extends JEXPlugin {
+
+	public CTC_ImageCalculator() {}
+
+	/////////// Define Inputs ///////////
+	
+	@InputMarker(name="Image A", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	JEXData imageAData;
+
+	@InputMarker(name="Image B", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	JEXData imageBData;
+
+	/////////// Define Parameters ///////////
+	
+	@ParameterMarker(uiOrder=0, name="Math Operation", description="Math operation to perform using the pixel information from Image A and B.", ui=MarkerConstants.UI_DROPDOWN, choices={ "A+B", "A-B", "A*B", "A/B", "|A-B|", "MAX", "MIN", "AVERAGE", "AND", "OR", "XOR", "COPY", "COPY Transparent 0" }, defaultChoice=0)
+	String mathOp;
+
+	@ParameterMarker(uiOrder=1, name="Output Bit-Depth", description="Bit-Depth of the output image", ui=MarkerConstants.UI_DROPDOWN, choices={"8","16","32"}, defaultChoice=2)
+	int bitDepth;
+	
+	/////////// Define Outputs ///////////
+	
+	@OutputMarker(name="Calculated Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="", enabled=true)
+	JEXData output;
+
+	/**
+	 * Returns true if the user wants to allow multithreding
+	 * 
+	 * @return
+	 */
+	@Override
+	public boolean allowMultithreading()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean run(JEXEntry arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}
