@@ -39,9 +39,9 @@ import tables.DimensionMap;
 		visible=true,
 		description="Export multiple files to a folder."
 		)
-public class CTC_JEX_ExportMultipleFiles extends JEXPlugin {
+public class CTC_ExportMultipleFiles extends JEXPlugin {
 	
-	public CTC_JEX_ExportMultipleFiles()
+	public CTC_ExportMultipleFiles()
 	{}
 	
 	// ----------------------------------------------------
