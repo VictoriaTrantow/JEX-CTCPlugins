@@ -7,11 +7,7 @@ import Database.DataReader.RoiReader;
 import Database.DataWriter.FileWriter;
 import Database.DataWriter.ImageWriter;
 import Database.DataWriter.RoiWriter;
-import Database.Definition.Parameter;
-import Database.Definition.ParameterSet;
-import Database.Definition.TypeName;
 import Database.SingleUserDatabase.JEXWriter;
-import function.JEXCrunchable;
 import function.imageUtility.MaximumFinder;
 import function.plugin.mechanism.InputMarker;
 import function.plugin.mechanism.JEXPlugin;
@@ -29,7 +25,6 @@ import image.roi.ROIPlus;
 
 import java.awt.Shape;
 import java.io.File;
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.scijava.plugin.Plugin;
@@ -90,28 +85,56 @@ public class CTC_JEX_FindMaximaSegmentation extends JEXPlugin {
 	
 	/////////// Define Parameters ///////////
 	
-	@ParameterMarker(uiOrder=1, name="Old Min", description="Image Intensity Value", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0.0")
-	double oldMin;
+	@ParameterMarker(uiOrder=1, name="Pre-Despeckle Radius", description="Radius of median filter applied before max finding", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
+	double despeckleR;
 	
-	@ParameterMarker(uiOrder=2, name="Old Max", description="Image Intensity Value", ui=MarkerConstants.UI_TEXTFIELD, defaultText="4095.0")
-	double oldMax;
+	@ParameterMarker(uiOrder=2, name="Pre-Smoothing Radius", description="Radius of mean filter applied before max finding", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
+	double smoothR;
 	
-	@ParameterMarker(uiOrder=3, name="New Min", description="Image Intensity Value", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0.0")
-	double newMin;
+	@ParameterMarker(uiOrder=3, name="Color Dim Name", description="Name of the color dimension.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="Color")
+	String colorDimName;
 	
-	@ParameterMarker(uiOrder=4, name="New Max", description="Image Intensity Value", ui=MarkerConstants.UI_TEXTFIELD, defaultText="65535.0")
-	double newMax;
+	@ParameterMarker(uiOrder=4, name="Maxima Color Dim Value", description="Value of the color dimension to analyze for determing maxima. (leave blank to ignore and perform on all images)", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
+	String nuclearDimValue;
 	
-	@ParameterMarker(uiOrder=5, name="Gamma", description="0.1-5.0, value of 1 results in no change", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1.0")
-	double gamma;
+	@ParameterMarker(uiOrder=5, name="Segmentation Color Dim Value", description="Value of the color dimension to use for segmentation using the found maxima. (leave blank to apply to the same color used to find maxima)", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
+	String segDimValue;
 	
-	@ParameterMarker(uiOrder=6, name="Output Bit Depth", description="Depth of the outputted image", ui=MarkerConstants.UI_DROPDOWN, choices={ "8", "16", "32" }, defaultChoice=1)
-	int bitDepth;
+	@ParameterMarker(uiOrder=6, name="Tolerance", description="Local intensity increase threshold.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="20")
+	double tolerance;
+	
+	@ParameterMarker(uiOrder=7, name="Threshold", description="Minimum hieght of a maximum.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
+	double threshold;
+	
+	@ParameterMarker(uiOrder=8, name="Exclude Maximima on Edges?", description="Exclude particles on the edge of the image?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean excludePtsOnEdges;
+	
+	@ParameterMarker(uiOrder=9, name="Exclude Segments on Edges?", description="Exclude segements on the edge of the image? (helpful so that half-nuclei aren't counted with the maxima found while excluding maxima on edges)", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=false)
+	boolean excludeSegsOnEdges;
+	
+	@ParameterMarker(uiOrder=10, name="Is EDM?", description="Is the image being analyzed already a Euclidean Distance Measurement?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=false)
+	boolean isEDM;
+	
+	@ParameterMarker(uiOrder=11, name="Particles Are White?", description="Are the particles displayed as white on a black background?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean lightBackground;
+	
+	@ParameterMarker(uiOrder=12, name="Output Maxima Only?", description="Output the maxima only (checked TRUE) or also segmented image, point count, and XY List of points (unchecked FALSE)?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean maximaOnly;
+	
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Adjusted Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant adjusted image", enabled=true)
-	JEXData output;
+	@OutputMarker(name="Maxima", type=MarkerConstants.TYPE_ROI, flavor="", description="The Roi of maxima", enabled=true)
+	JEXData output0;
+	
+	@OutputMarker(name="XY List", type=MarkerConstants.TYPE_FILE, flavor="", description="The coordinate list of maxima", enabled=true)
+	JEXData output1;
+	
+	@OutputMarker(name="Counts", type=MarkerConstants.TYPE_FILE, flavor="", description="The total number of maxima", enabled=true)
+	JEXData output2;
+	
+	@OutputMarker(name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant segmented image", enabled=true)
+	JEXData output3;
 
 	// ----------------------------------------------------
 	// --------- THE ACTUAL MEAT OF THIS FUNCTION ---------
@@ -141,23 +164,7 @@ public class CTC_JEX_FindMaximaSegmentation extends JEXPlugin {
 			{
 				roiProvided = true;
 			}
-			
-			
-			
-			/* GATHER PARAMETERS */
-			double despeckleR = Double.parseDouble(this.parameters.getValueOfParameter("Pre-Despeckle Radius"));
-			double smoothR = Double.parseDouble(this.parameters.getValueOfParameter("Pre-Smoothing Radius"));
-			String colorDimName = this.parameters.getValueOfParameter("Color Dim Name");
-			String nuclearDimValue = this.parameters.getValueOfParameter("Maxima Color Dim Value");
-			String segDimValue = this.parameters.getValueOfParameter("Segmentation Color Dim Value");
-			double tolerance = Double.parseDouble(this.parameters.getValueOfParameter("Tolerance"));
-			double threshold = Double.parseDouble(this.parameters.getValueOfParameter("Threshold"));
-			boolean excludePtsOnEdges = Boolean.parseBoolean(this.parameters.getValueOfParameter("Exclude Maximima on Edges?"));
-			boolean excludeSegsOnEdges = Boolean.parseBoolean(this.parameters.getValueOfParameter("Exclude Segments on Edges?"));
-			boolean isEDM = Boolean.parseBoolean(this.parameters.getValueOfParameter("Is EDM?"));
-			boolean lightBackground = !Boolean.parseBoolean(this.parameters.getValueOfParameter("Particles Are White?"));
-			boolean maximaOnly = Boolean.parseBoolean(this.parameters.getValueOfParameter("Output Maxima Only?"));
-			
+				
 			
 			
 			/* RUN THE FUNCTION */
@@ -413,19 +420,15 @@ public class CTC_JEX_FindMaximaSegmentation extends JEXPlugin {
 			}
 			
 			// roi, file file(value), image
-			JEXData output0 = RoiWriter.makeRoiObject(this.outputNames[0].getName(), outputRoiMap);
-			this.realOutputs.add(output0);
+			output0 = RoiWriter.makeRoiObject("Maxima", outputRoiMap);
 			
 			if(!maximaOnly)
 			{
-				JEXData output1 = FileWriter.makeFileObject(this.outputNames[1].getName(), null, outputFileMap);
-				String countsFile = JEXTableWriter.writeTable(this.outputNames[2].getName(), outputCountMap, "arff");
-				JEXData output2 = FileWriter.makeFileObject(this.outputNames[2].getName(), null, countsFile);
-				JEXData output3 = ImageWriter.makeImageStackFromPaths(this.outputNames[3].getName(), outputImageMap);
-				
-				this.realOutputs.add(output1);
-				this.realOutputs.add(output2);
-				this.realOutputs.add(output3);
+				output1 = FileWriter.makeFileObject("XY List", null, outputFileMap);
+				String countsFile = JEXTableWriter.writeTable("Counts", outputCountMap, "arff");
+				output2 = FileWriter.makeFileObject("Counts", null, countsFile);
+				output3 = ImageWriter.makeImageStackFromPaths("Segmented Image", outputImageMap);
+
 			}
 			
 			// Return status
