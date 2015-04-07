@@ -39,9 +39,11 @@ import function.plugin.mechanism.ParameterMarker;
 		visible=true,
 		description="Use a predefined image filter and specify the filter radius."
 		)
-public class CTC_JEX_Filters extends JEXPlugin {
+public class CTC_Filters extends JEXPlugin {
 	
-	public CTC_JEX_Filters()
+	public static String MEAN = "mean", MIN = "min", MAX = "max", MEDIAN = "median", VARIANCE = "variance";
+
+	public CTC_Filters()
 	{}
 	
 	/////////// Define Inputs ///////////

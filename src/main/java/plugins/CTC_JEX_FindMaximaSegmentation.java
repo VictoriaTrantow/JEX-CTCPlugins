@@ -421,7 +421,7 @@ public class CTC_JEX_FindMaximaSegmentation extends JEXCrunchable {
 						{
 							// Smooth the image
 							RankFilters rF = new RankFilters();
-							rF.setup(CTC_JEX_Filters.MEDIAN, imToSeg);
+							rF.setup(CTC_Filters.MEDIAN, imToSeg);
 							rF.rank(toSeg, despeckleR, RankFilters.MEDIAN);
 							rF.run(toSeg);
 						}
@@ -439,7 +439,7 @@ public class CTC_JEX_FindMaximaSegmentation extends JEXCrunchable {
 						{
 							// Smooth the image
 							RankFilters rF = new RankFilters();
-							rF.setup(CTC_JEX_Filters.MEAN, imToSeg);
+							rF.setup(CTC_Filters.MEAN, imToSeg);
 							rF.rank(toSeg, smoothR, RankFilters.MEAN);
 						}
 						if(this.isCanceled())
