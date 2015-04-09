@@ -48,9 +48,9 @@ import tables.DimensionMap;
 		visible=true,
 		description="Function that allows you to crop a regions specified by a point ROI (e.g., cells identified by find maxima)."
 		)
-public class CTC_JEX_ImageTools_CropPoints extends JEXPlugin {
+public class CTC_CropPoints extends JEXPlugin {
 	
-	public CTC_JEX_ImageTools_CropPoints()
+	public CTC_CropPoints()
 	{}
 	
 	// ----------------------------------------------------
