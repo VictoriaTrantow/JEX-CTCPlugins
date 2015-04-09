@@ -7,12 +7,13 @@ import Database.DataReader.RoiReader;
 import Database.DataWriter.FileWriter;
 import Database.DataWriter.ImageWriter;
 import Database.DataWriter.RoiWriter;
-import Database.Definition.Parameter;
-import Database.Definition.ParameterSet;
-import Database.Definition.TypeName;
 import Database.SingleUserDatabase.JEXWriter;
-import function.JEXCrunchable;
 import function.imageUtility.MaximumFinder;
+import function.plugin.mechanism.InputMarker;
+import function.plugin.mechanism.JEXPlugin;
+import function.plugin.mechanism.MarkerConstants;
+import function.plugin.mechanism.OutputMarker;
+import function.plugin.mechanism.ParameterMarker;
 import ij.ImagePlus;
 import ij.gui.Roi;
 import ij.plugin.filter.RankFilters;
@@ -24,8 +25,9 @@ import image.roi.ROIPlus;
 
 import java.awt.Shape;
 import java.io.File;
-import java.util.HashMap;
 import java.util.TreeMap;
+
+import org.scijava.plugin.Plugin;
 
 import jex.statics.JEXStatics;
 import logs.Logs;
@@ -44,173 +46,96 @@ import weka.core.converters.JEXTableWriter;
  * @author erwinberthier
  * 
  */
-public class CopyOfCTC_JEX_FindMaximaSegmentation extends JEXCrunchable {
+
+@Plugin(
+		type = JEXPlugin.class,
+		name="CTC - Find Maxima Segmentation",
+		menuPath="CTC Toolbox",
+		visible=true,
+		description="Find maxima in a grayscale image or one color of a multi-color image."
+		)
+public class CTC_FindMaximaSegmentation extends JEXPlugin {
 	
-	public CopyOfCTC_JEX_FindMaximaSegmentation()
+	public CTC_FindMaximaSegmentation()
 	{}
 	
 	// ----------------------------------------------------
 	// --------- INFORMATION ABOUT THE FUNCTION -----------
 	// ----------------------------------------------------
 	
-	/**
-	 * Returns the name of the function
-	 * 
-	 * @return Name string
-	 */
+
 	@Override
-	public String getName()
+	public int getMaxThreads()
 	{
-		String result = "Find Maxima Segmentation";
-		return result;
+		return 10;
 	}
-	
-	/**
-	 * This method returns a string explaining what this method does This is purely informational and will display in JEX
-	 * 
-	 * @return Information string
-	 */
-	@Override
-	public String getInfo()
-	{
-		String result = "Find maxima in a grayscale image or one color of a multi-color image.";
-		return result;
-	}
-	
-	/**
-	 * This method defines in which group of function this function will be shown in... Toolboxes (choose one, caps matter): Visualization, Image processing, Custom Cell Analysis, Cell tracking, Image tools Stack processing, Data Importing, Custom
-	 * image analysis, Matlab/Octave
-	 * 
-	 */
-	@Override
-	public String getToolbox()
-	{
-		String toolbox = "CTC Toolbox";
-		return toolbox;
-	}
-	
-	/**
-	 * This method defines if the function appears in the list in JEX It should be set to true expect if you have good reason for it
-	 * 
-	 * @return true if function shows in JEX
-	 */
-	@Override
-	public boolean showInList()
-	{
-		return true;
-	}
-	
-	/**
-	 * Returns true if the user wants to allow multithreding
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean allowMultithreading()
-	{
-		return true;
-	}
+
 	
 	// ----------------------------------------------------
 	// --------- INPUT OUTPUT DEFINITIONS -----------------
 	// ----------------------------------------------------
 	
-	/**
-	 * Return the array of input names
-	 * 
-	 * @return array of input names
-	 */
-	@Override
-	public TypeName[] getInputNames()
-	{
-		TypeName[] inputNames = new TypeName[2];
-		inputNames[0] = new TypeName(IMAGE, "Image");
-		inputNames[1] = new TypeName(ROI, "ROI (optional)");
-		return inputNames;
-	}
-	
-	/**
-	 * Return the array of output names defined for this function
-	 * 
-	 * @return
-	 */
-	@Override
-	public TypeName[] getOutputs()
-	{
-		this.defaultOutputNames = new TypeName[4];
-		this.defaultOutputNames[0] = new TypeName(ROI, "Maxima");
-		this.defaultOutputNames[1] = new TypeName(FILE, "XY List");
-		this.defaultOutputNames[2] = new TypeName(FILE, "Counts");
-		this.defaultOutputNames[3] = new TypeName(IMAGE, "Segmented Image");
+	/////////// Define Inputs ///////////
 		
-		if(this.outputNames == null)
-		{
-			return this.defaultOutputNames;
-		}
-		return this.outputNames;
-	}
+	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be processed.", optional=false)
+	JEXData imageData;
 	
-	/**
-	 * Returns a list of parameters necessary for this function to run... Every parameter is defined as a line in a form that provides the ability to set how it will be displayed to the user and what options are available to choose from The simplest
-	 * FormLine can be written as: FormLine p = new FormLine(parameterName); This will provide a text field for the user to input the value of the parameter named parameterName More complex displaying options can be set by consulting the FormLine API
-	 * 
-	 * @return list of FormLine to create a parameter panel
-	 */
-	@Override
-	public ParameterSet requiredParameters()
-	{
-		// (ImageProcessor ip, double tolerance, double threshold, int
-		// outputType, boolean excludeOnEdges, boolean isEDM, Roi roiArg,
-		// boolean lightBackground)
-		// Parameter p0 = new
-		// Parameter("Dummy Parameter","Lets user know that the function has been selected.",FormLine.DROPDOWN,new
-		// String[] {"true"},0);
-		Parameter p0a = new Parameter("Pre-Despeckle Radius", "Radius of median filter applied before max finding", "0");
-		Parameter p0b = new Parameter("Pre-Smoothing Radius", "Radius of mean filter applied before max finding", "0");
-		Parameter pa1 = new Parameter("Color Dim Name", "Name of the color dimension.", "Color");
-		Parameter pa2 = new Parameter("Maxima Color Dim Value", "Value of the color dimension to analyze for determing maxima. (leave blank to ignore and perform on all images)", "");
-		Parameter pa3 = new Parameter("Segmentation Color Dim Value", "Value of the color dimension to use for segmentation using the found maxima. (leave blank to apply to the same color used to find maxima)", "");
-		Parameter p1 = new Parameter("Tolerance", "Local intensity increase threshold.", "20");
-		Parameter p2 = new Parameter("Threshold", "Minimum hieght of a maximum.", "0");
-		Parameter p3a = new Parameter("Exclude Maximima on Edges?", "Exclude particles on the edge of the image?", Parameter.CHECKBOX, true);
-		Parameter p3b = new Parameter("Exclude Segments on Edges?", "Exclude segements on the edge of the image? (helpful so that half-nuclei aren't counted with the maxima found while excluding maxima on edges)", Parameter.CHECKBOX, false);
-		Parameter p4 = new Parameter("Is EDM?", "Is the image being analyzed already a Euclidean Distance Measurement?", Parameter.CHECKBOX, false);
-		Parameter p5 = new Parameter("Particles Are White?", "Are the particles displayed as white on a black background?", Parameter.CHECKBOX, true);
-		Parameter p6 = new Parameter("Output Maxima Only?", "Output the maxima only (checked TRUE) or also segmented image, point count, and XY List of points (unchecked FALSE)?", Parameter.CHECKBOX, true);
-		
-		// Make an array of the parameters and return it
-		ParameterSet parameterArray = new ParameterSet();
-		parameterArray.addParameter(p0a);
-		parameterArray.addParameter(p0b);
-		parameterArray.addParameter(pa1);
-		parameterArray.addParameter(pa2);
-		parameterArray.addParameter(pa3);
-		parameterArray.addParameter(p1);
-		parameterArray.addParameter(p2);
-		parameterArray.addParameter(p3a);
-		parameterArray.addParameter(p3b);
-		parameterArray.addParameter(p4);
-		parameterArray.addParameter(p5);
-		parameterArray.addParameter(p6);
-		return parameterArray;
-	}
+	@InputMarker(name="ROI (optional)", type=MarkerConstants.TYPE_ROI, description="Roi to be processed.", optional=true)
+	JEXData roiData;
 	
-	// ----------------------------------------------------
-	// --------- ERROR CHECKING METHODS -------------------
-	// ----------------------------------------------------
+	/////////// Define Parameters ///////////
 	
-	/**
-	 * Returns the status of the input validity checking It is HIGHLY recommended to implement input checking however this can be over-ridden by returning false If over-ridden ANY batch function using this function will not be able perform error
-	 * checking...
-	 * 
-	 * @return true if input checking is on
-	 */
-	@Override
-	public boolean isInputValidityCheckingEnabled()
-	{
-		return false;
-	}
+	@ParameterMarker(uiOrder=1, name="Pre-Despeckle Radius", description="Radius of median filter applied before max finding", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
+	double despeckleR;
 	
+	@ParameterMarker(uiOrder=2, name="Pre-Smoothing Radius", description="Radius of mean filter applied before max finding", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
+	double smoothR;
+	
+	@ParameterMarker(uiOrder=3, name="Color Dim Name", description="Name of the color dimension.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="Color")
+	String colorDimName;
+	
+	@ParameterMarker(uiOrder=4, name="Maxima Color Dim Value", description="Value of the color dimension to analyze for determing maxima. (leave blank to ignore and perform on all images)", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
+	String nuclearDimValue;
+	
+	@ParameterMarker(uiOrder=5, name="Segmentation Color Dim Value", description="Value of the color dimension to use for segmentation using the found maxima. (leave blank to apply to the same color used to find maxima)", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
+	String segDimValue;
+	
+	@ParameterMarker(uiOrder=6, name="Tolerance", description="Local intensity increase threshold.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="20")
+	double tolerance;
+	
+	@ParameterMarker(uiOrder=7, name="Threshold", description="Minimum hieght of a maximum.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
+	double threshold;
+	
+	@ParameterMarker(uiOrder=8, name="Exclude Maximima on Edges?", description="Exclude particles on the edge of the image?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean excludePtsOnEdges;
+	
+	@ParameterMarker(uiOrder=9, name="Exclude Segments on Edges?", description="Exclude segements on the edge of the image? (helpful so that half-nuclei aren't counted with the maxima found while excluding maxima on edges)", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=false)
+	boolean excludeSegsOnEdges;
+	
+	@ParameterMarker(uiOrder=10, name="Is EDM?", description="Is the image being analyzed already a Euclidean Distance Measurement?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=false)
+	boolean isEDM;
+	
+	@ParameterMarker(uiOrder=11, name="Particles Are White?", description="Are the particles displayed as white on a black background?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean lightBackground;
+	
+	@ParameterMarker(uiOrder=12, name="Output Maxima Only?", description="Output the maxima only (checked TRUE) or also segmented image, point count, and XY List of points (unchecked FALSE)?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean maximaOnly;
+	
+	
+	/////////// Define Outputs ///////////
+	
+	@OutputMarker(name="Maxima", type=MarkerConstants.TYPE_ROI, flavor="", description="The Roi of maxima", enabled=true)
+	JEXData output0;
+	
+	@OutputMarker(name="XY List", type=MarkerConstants.TYPE_FILE, flavor="", description="The coordinate list of maxima", enabled=true)
+	JEXData output1;
+	
+	@OutputMarker(name="Counts", type=MarkerConstants.TYPE_FILE, flavor="", description="The total number of maxima", enabled=true)
+	JEXData output2;
+	
+	@OutputMarker(name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant segmented image", enabled=true)
+	JEXData output3;
+
 	// ----------------------------------------------------
 	// --------- THE ACTUAL MEAT OF THIS FUNCTION ---------
 	// ----------------------------------------------------
@@ -220,41 +145,26 @@ public class CopyOfCTC_JEX_FindMaximaSegmentation extends JEXCrunchable {
 	 * 
 	 */
 	@Override
-	public boolean run(JEXEntry entry, HashMap<String,JEXData> inputs)
+	public boolean run(JEXEntry optionalEntry)
 	{
 		try
 		{
 			/* COLLECT DATA INPUTS */
-			boolean roiProvided = false;
-			JEXData imageData = inputs.get("Image");
+			
 			// if/else to figure out whether or not valid image data has been given;
 			// ends run if not
 			if(imageData == null || !imageData.getTypeName().getType().equals(JEXData.IMAGE))
 			{
 				return false;
 			}
-			JEXData roiData = inputs.get("ROI (optional)");
+			
+			// Check whether Roi available
+			boolean roiProvided = false;
 			if(roiData != null && roiData.getTypeName().getType().equals(JEXData.ROI))
 			{
 				roiProvided = true;
 			}
-			
-			
-			
-			/* GATHER PARAMETERS */
-			double despeckleR = Double.parseDouble(this.parameters.getValueOfParameter("Pre-Despeckle Radius"));
-			double smoothR = Double.parseDouble(this.parameters.getValueOfParameter("Pre-Smoothing Radius"));
-			String colorDimName = this.parameters.getValueOfParameter("Color Dim Name");
-			String nuclearDimValue = this.parameters.getValueOfParameter("Maxima Color Dim Value");
-			String segDimValue = this.parameters.getValueOfParameter("Segmentation Color Dim Value");
-			double tolerance = Double.parseDouble(this.parameters.getValueOfParameter("Tolerance"));
-			double threshold = Double.parseDouble(this.parameters.getValueOfParameter("Threshold"));
-			boolean excludePtsOnEdges = Boolean.parseBoolean(this.parameters.getValueOfParameter("Exclude Maximima on Edges?"));
-			boolean excludeSegsOnEdges = Boolean.parseBoolean(this.parameters.getValueOfParameter("Exclude Segments on Edges?"));
-			boolean isEDM = Boolean.parseBoolean(this.parameters.getValueOfParameter("Is EDM?"));
-			boolean lightBackground = !Boolean.parseBoolean(this.parameters.getValueOfParameter("Particles Are White?"));
-			boolean maximaOnly = Boolean.parseBoolean(this.parameters.getValueOfParameter("Output Maxima Only?"));
-			
+				
 			
 			
 			/* RUN THE FUNCTION */
@@ -510,19 +420,15 @@ public class CopyOfCTC_JEX_FindMaximaSegmentation extends JEXCrunchable {
 			}
 			
 			// roi, file file(value), image
-			JEXData output0 = RoiWriter.makeRoiObject(this.outputNames[0].getName(), outputRoiMap);
-			this.realOutputs.add(output0);
+			output0 = RoiWriter.makeRoiObject("Maxima", outputRoiMap);
 			
 			if(!maximaOnly)
 			{
-				JEXData output1 = FileWriter.makeFileObject(this.outputNames[1].getName(), null, outputFileMap);
-				String countsFile = JEXTableWriter.writeTable(this.outputNames[2].getName(), outputCountMap, "arff");
-				JEXData output2 = FileWriter.makeFileObject(this.outputNames[2].getName(), null, countsFile);
-				JEXData output3 = ImageWriter.makeImageStackFromPaths(this.outputNames[3].getName(), outputImageMap);
-				
-				this.realOutputs.add(output1);
-				this.realOutputs.add(output2);
-				this.realOutputs.add(output3);
+				output1 = FileWriter.makeFileObject("XY List", null, outputFileMap);
+				String countsFile = JEXTableWriter.writeTable("Counts", outputCountMap, "arff");
+				output2 = FileWriter.makeFileObject("Counts", null, countsFile);
+				output3 = ImageWriter.makeImageStackFromPaths("Segmented Image", outputImageMap);
+
 			}
 			
 			// Return status
