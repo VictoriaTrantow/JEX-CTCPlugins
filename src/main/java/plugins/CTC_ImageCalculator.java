@@ -61,7 +61,7 @@ public class CTC_ImageCalculator extends JEXPlugin {
 	}
 
 	@Override
-	public boolean run(JEXEntry optionalEntry) {
+	public boolean run(JEXEntry arg0) {
 		// Collect the inputs
 		if(imageAData == null || !imageAData.getTypeName().getType().equals(JEXData.IMAGE))
 			return false;
