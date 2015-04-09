@@ -116,6 +116,7 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 	boolean isEDM;
 	
 	@ParameterMarker(uiOrder=11, name="Particles Are White?", description="Are the particles displayed as white on a black background?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
+	boolean particlesAreWhite;
 	boolean lightBackground;
 	
 	@ParameterMarker(uiOrder=12, name="Output Maxima Only?", description="Output the maxima only (checked TRUE) or also segmented image, point count, and XY List of points (unchecked FALSE)?", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=true)
@@ -147,6 +148,7 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 	@Override
 	public boolean run(JEXEntry optionalEntry)
 	{
+		lightBackground = !particlesAreWhite;
 		try
 		{
 			/* COLLECT DATA INPUTS */
