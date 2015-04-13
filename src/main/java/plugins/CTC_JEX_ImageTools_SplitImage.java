@@ -4,15 +4,17 @@ import Database.DBObjects.JEXData;
 import Database.DBObjects.JEXEntry;
 import Database.DataReader.ImageReader;
 import Database.DataWriter.ImageWriter;
-import Database.Definition.Parameter;
-import Database.Definition.ParameterSet;
-import Database.Definition.TypeName;
 import Database.SingleUserDatabase.JEXWriter;
-import function.JEXCrunchable;
+import function.plugin.mechanism.InputMarker;
+import function.plugin.mechanism.JEXPlugin;
+import function.plugin.mechanism.MarkerConstants;
+import function.plugin.mechanism.OutputMarker;
+import function.plugin.mechanism.ParameterMarker;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.TreeMap;
+
+import org.scijava.plugin.Plugin;
 
 import jex.statics.JEXStatics;
 import tables.DimTable;
@@ -25,10 +27,18 @@ import tables.DimensionMap;
  * 
  * JEX enables the use of several data object types The specific API for these can be found in the main JEXperiment folder. These API provide methods to retrieve data from these objects, create new objects and handle the data they contain.
  * 
- * @author erwinberthier
+ * @author erwinberthier, convert to JEXPlugin by Mengcheng Qi
  * 
  */
-public class CTC_JEX_ImageTools_SplitImage extends JEXCrunchable {
+
+@Plugin(
+		type = JEXPlugin.class,
+		name="CTC - Split Image",
+		menuPath="CTC Toolbox",
+		visible=true,
+		description="Split and image set along a dimension. (e.g., split multicolor image set into image sets with an individual color)"
+		)
+public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
 	
 	public CTC_JEX_ImageTools_SplitImage()
 	{}
@@ -37,138 +47,36 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXCrunchable {
 	// --------- INFORMATION ABOUT THE FUNCTION -----------
 	// ----------------------------------------------------
 	
-	/**
-	 * Returns the name of the function
-	 * 
-	 * @return Name string
-	 */
 	@Override
-	public String getName()
+	public int getMaxThreads()
 	{
-		String result = "Split Image";
-		return result;
-	}
-	
-	/**
-	 * This method returns a string explaining what this method does This is purely informational and will display in JEX
-	 * 
-	 * @return Information string
-	 */
-	@Override
-	public String getInfo()
-	{
-		String result = "Split and image set along a dimension. (e.g., split multicolor image set into image sets with an individual color)";
-		return result;
-	}
-	
-	/**
-	 * This method defines in which group of function this function will be shown in... Toolboxes (choose one, caps matter): Visualization, Image processing, Custom Cell Analysis, Cell tracking, Image tools Stack processing, Data Importing, Custom
-	 * image analysis, Matlab/Octave
-	 * 
-	 */
-	@Override
-	public String getToolbox()
-	{
-		String toolbox = "CTC Toolbox";
-		return toolbox;
-	}
-	
-	/**
-	 * This method defines if the function appears in the list in JEX It should be set to true expect if you have good reason for it
-	 * 
-	 * @return true if function shows in JEX
-	 */
-	@Override
-	public boolean showInList()
-	{
-		return true;
-	}
-	
-	/**
-	 * Returns true if the user wants to allow multithreding
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean allowMultithreading()
-	{
-		return true;
+		return 10;
 	}
 	
 	// ----------------------------------------------------
 	// --------- INPUT OUTPUT DEFINITIONS -----------------
 	// ----------------------------------------------------
 	
-	/**
-	 * Return the array of input names
-	 * 
-	 * @return array of input names
-	 */
-	@Override
-	public TypeName[] getInputNames()
-	{
-		TypeName[] inputNames = new TypeName[1];
-		inputNames[0] = new TypeName(IMAGE, "Image");
-		return inputNames;
-	}
-	
-	/**
-	 * Return the array of output names defined for this function
-	 * 
-	 * @return
-	 */
-	@Override
-	public TypeName[] getOutputs()
-	{
-		this.defaultOutputNames = new TypeName[0];
-		// this.defaultOutputNames[0] = new TypeName(IMAGE, "Split Image");
+	/////////// Define Inputs ///////////
 		
-		if(this.outputNames == null)
-		{
-			return this.defaultOutputNames;
-		}
-		return this.outputNames;
-	}
+	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be splited up.", optional=false)
+	JEXData imageData;
 	
-	/**
-	 * Returns a list of parameters necessary for this function to run... Every parameter is defined as a line in a form that provides the ability to set how it will be displayed to the user and what options are available to choose from The simplest
-	 * FormLine can be written as: FormLine p = new FormLine(parameterName); This will provide a text field for the user to input the value of the parameter named parameterName More complex displaying options can be set by consulting the FormLine API
-	 * 
-	 * @return list of FormLine to create a parameter panel
-	 */
-	@Override
-	public ParameterSet requiredParameters()
-	{
-		// Parameter p0 = new
-		// Parameter("Dummy Parameter","Lets user know that the function has been selected.",FormLine.DROPDOWN,new
-		// String[] {"true"},0);
-		Parameter p1 = new Parameter("Dim to Split", "Name of the dimension to split", "Color");
-		Parameter p2 = new Parameter("Keep Dim?", "Keep the dimension name in the resultant images (i.e., the new objects with have a dimension matching the name of the dimension that was split, have a size of one, and a value matching the original value)", Parameter.CHECKBOX, false);
-		
-		// Make an array of the parameters and return it
-		ParameterSet parameterArray = new ParameterSet();
-		// parameterArray.addParameter(p0);
-		parameterArray.addParameter(p1);
-		parameterArray.addParameter(p2);
-		return parameterArray;
-	}
+	/////////// Define Parameters ///////////
 	
-	// ----------------------------------------------------
-	// --------- ERROR CHECKING METHODS -------------------
-	// ----------------------------------------------------
+	@ParameterMarker(uiOrder=1, name="Dim to Split", description="Name of the dimension to split", ui=MarkerConstants.UI_TEXTFIELD, defaultText="Color")
+	String dim;
 	
-	/**
-	 * Returns the status of the input validity checking It is HIGHLY recommended to implement input checking however this can be over-ridden by returning false If over-ridden ANY batch function using this function will not be able perform error
-	 * checking...
-	 * 
-	 * @return true if input checking is on
-	 */
-	@Override
-	public boolean isInputValidityCheckingEnabled()
-	{
-		return false;
-	}
+	@ParameterMarker(uiOrder=2, name="Keep Dim?", description="Keep the dimension name in the resultant images " +
+			"(i.e., the new objects with have a dimension matching the name of the dimension that was split, " +
+			"have a size of one, and a value matching the original value)", ui=MarkerConstants.UI_CHECKBOX, defaultBoolean=false)
+	Boolean keep;
 	
+	/////////// Define Outputs ///////////
+	
+	@OutputMarker(name="Split Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant split image stack", enabled=true)
+	JEXData output;
+
 	// ----------------------------------------------------
 	// --------- THE ACTUAL MEAT OF THIS FUNCTION ---------
 	// ----------------------------------------------------
@@ -178,19 +86,14 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXCrunchable {
 	 * 
 	 */
 	@Override
-	public boolean run(JEXEntry entry, HashMap<String,JEXData> inputs)
+	public boolean run(JEXEntry optionalEntry)
 	{
-		// Collect the inputs
-		JEXData imageData = inputs.get("Image");
-		imageData.getDataMap();
+		// Check the inputs
+		// imageData.getDataMap();
 		if(imageData == null || !imageData.getTypeName().getType().equals(JEXData.IMAGE))
 		{
 			return false;
 		}
-		
-		// Gather parameters
-		String dim = this.parameters.getValueOfParameter("Dim to Split");
-		Boolean keep = Boolean.parseBoolean(this.parameters.getValueOfParameter("Keep Dim?"));
 		
 		// Run the function
 		TreeMap<DimensionMap,String> imageMap = ImageReader.readObjectToImagePathTable(imageData);
@@ -215,10 +118,10 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXCrunchable {
 				percentage = (int) (100 * ((double) (count) / ((double) imageMap.size())));
 				JEXStatics.statusBar.setProgressPercentage(percentage);
 			}
-			JEXData output = ImageWriter.makeImageStackFromPaths(imageData.name + " " + dim + " " + subTable.getDimWithName(dim).min(), splitImageMap);
-			this.realOutputs.add(output);
+			output = ImageWriter.makeImageStackFromPaths(imageData.name + " " + dim + " " + subTable.getDimWithName(dim).min(), splitImageMap);
+			
 		}
-		if(this.realOutputs.size() == 0)
+		if(output == null)
 		{
 			return false;
 		}
