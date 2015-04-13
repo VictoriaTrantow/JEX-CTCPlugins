@@ -43,11 +43,11 @@ import tables.DimensionMap;
 		visible=true,
 		description="Function that allows you to stitch an image ARRAY into a single image using two image alignment objects."
 		)
-public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXPlugin {
+public class CTC_Stitch_NDRectCoord extends JEXPlugin {
 	
 	public static final int LtoR = 0, TtoB = 1;
 	
-	public CTC_JEX_ImageTools_Stitch_NDRectCoord()
+	public CTC_Stitch_NDRectCoord()
 	{}
 	
 	// ----------------------------------------------------
