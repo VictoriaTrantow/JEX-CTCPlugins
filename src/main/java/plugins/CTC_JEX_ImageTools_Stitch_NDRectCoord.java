@@ -4,10 +4,11 @@ import Database.DBObjects.JEXData;
 import Database.DBObjects.JEXEntry;
 import Database.DataReader.ValueReader;
 import Database.DataWriter.ImageWriter;
-import Database.Definition.Parameter;
-import Database.Definition.ParameterSet;
-import Database.Definition.TypeName;
-import function.JEXCrunchable;
+import function.plugin.mechanism.InputMarker;
+import function.plugin.mechanism.JEXPlugin;
+import function.plugin.mechanism.MarkerConstants;
+import function.plugin.mechanism.OutputMarker;
+import function.plugin.mechanism.ParameterMarker;
 import image.roi.PointList;
 
 import java.awt.Rectangle;
@@ -16,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import org.scijava.plugin.Plugin;
 
 import miscellaneous.CSVList;
 import tables.Dim;
@@ -29,10 +32,18 @@ import tables.DimensionMap;
  * 
  * JEX enables the use of several data object types The specific API for these can be found in the main JEXperiment folder. These API provide methods to retrieve data from these objects, create new objects and handle the data they contain.
  * 
- * @author erwinberthier
+ * @author erwinberthier, convert to JEXPlugin by Mengcheng Qi
  * 
  */
-public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXCrunchable {
+
+@Plugin(
+		type = JEXPlugin.class,
+		name="CTC - Stitch 2 Dims Using Alignments",
+		menuPath="CTC Toolbox",
+		visible=true,
+		description="Function that allows you to stitch an image ARRAY into a single image using two image alignment objects."
+		)
+public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXPlugin {
 	
 	public static final int LtoR = 0, TtoB = 1;
 	
@@ -43,142 +54,53 @@ public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXCrunchable {
 	// --------- INFORMATION ABOUT THE FUNCTION -----------
 	// ----------------------------------------------------
 	
-	/**
-	 * Returns the name of the function
-	 * 
-	 * @return Name string
-	 */
 	@Override
-	public String getName()
+	public int getMaxThreads()
 	{
-		String result = "Stitch 2 Dims Using Alignments";
-		return result;
-	}
-	
-	/**
-	 * This method returns a string explaining what this method does This is purely informational and will display in JEX
-	 * 
-	 * @return Information string
-	 */
-	@Override
-	public String getInfo()
-	{
-		String result = "Function that allows you to stitch an image ARRAY into a single image using two image alignment objects.";
-		return result;
-	}
-	
-	/**
-	 * This method defines in which group of function this function will be shown in... Toolboxes (choose one, caps matter): Visualization, Image processing, Custom Cell Analysis, Cell tracking, Image tools Stack processing, Data Importing, Custom
-	 * image analysis, Matlab/Octave
-	 * 
-	 */
-	@Override
-	public String getToolbox()
-	{
-		String toolbox = "CTC Toolbox";
-		return toolbox;
-	}
-	
-	/**
-	 * This method defines if the function appears in the list in JEX It should be set to true expect if you have good reason for it
-	 * 
-	 * @return true if function shows in JEX
-	 */
-	@Override
-	public boolean showInList()
-	{
-		return true;
-	}
-	
-	/**
-	 * Returns true if the user wants to allow multithreding
-	 * 
-	 * @return
-	 */
-	@Override
-	public boolean allowMultithreading()
-	{
-		return true;
+		return 10;
 	}
 	
 	// ----------------------------------------------------
 	// --------- INPUT OUTPUT DEFINITIONS -----------------
 	// ----------------------------------------------------
 	
-	/**
-	 * Return the array of input names
-	 * 
-	 * @return array of input names
-	 */
-	@Override
-	public TypeName[] getInputNames()
-	{
-		TypeName[] inputNames = new TypeName[3];
-		inputNames[0] = new TypeName(VALUE, "Horizontal Image Alignment");
-		inputNames[1] = new TypeName(VALUE, "Vertical Image Alignment");
-		inputNames[2] = new TypeName(IMAGE, "Image Set");
-		return inputNames;
-	}
-	
-	/**
-	 * Return the array of output names defined for this function
-	 * 
-	 * @return
-	 */
-	@Override
-	public TypeName[] getOutputs()
-	{
-		defaultOutputNames = new TypeName[1];
-		defaultOutputNames[0] = new TypeName(IMAGE, "Stitched Image");
+	/////////// Define Inputs ///////////
 		
-		if(outputNames == null)
-			return defaultOutputNames;
-		return outputNames;
-	}
+	@InputMarker(name="Image Set", type=MarkerConstants.TYPE_IMAGE, description="Image to be stitched up.", optional=false)
+	JEXData imageData;
 	
-	/**
-	 * Returns a list of parameters necessary for this function to run... Every parameter is defined as a line in a form that provides the ability to set how it will be displayed to the user and what options are available to choose from The simplest
-	 * FormLine can be written as: FormLine p = new FormLine(parameterName); This will provide a text field for the user to input the value of the parameter named parameterName More complex displaying options can be set by consulting the FormLine API
-	 * 
-	 * @return list of FormLine to create a parameter panel
-	 */
-	@Override
-	public ParameterSet requiredParameters()
-	{
-		Parameter p0 = new Parameter("Scale", "The stitched image size will be scaled by this factor.", "1.0");
-		Parameter p1 = new Parameter("Output Bit Depth", "Bit depth to save the image as.", Parameter.DROPDOWN, new String[] { "8", "16" }, 1);
-		Parameter p2 = new Parameter("Normalize Intensities Fit Bit Depth", "Scale intensities to go from 0 to max value determined by new bit depth (\'true\' overrides intensity multiplier).", Parameter.DROPDOWN, new String[] { "true", "false" }, 1);
-		Parameter p3 = new Parameter("Intensity Multiplier", "Number to multiply all intensities by before converting to new bitDepth.", "1");
-		Parameter p4 = new Parameter("Image Row Dim Name", "Number of rows in the stitched image", "ImRow");
-		Parameter p5 = new Parameter("Image Col Dim Name", "Number of columns in the stitched image", "ImCol");
-		
-		// Make an array of the parameters and return it
-		ParameterSet parameterArray = new ParameterSet();
-		parameterArray.addParameter(p4);
-		parameterArray.addParameter(p5);
-		parameterArray.addParameter(p0);
-		parameterArray.addParameter(p1);
-		parameterArray.addParameter(p2);
-		parameterArray.addParameter(p3);
-		
-		return parameterArray;
-	}
+	@InputMarker(name="Horizontal Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Horizontal Image Aligment in pixels", optional=false)
+	JEXData horAlign;
 	
-	// ----------------------------------------------------
-	// --------- ERROR CHECKING METHODS -------------------
-	// ----------------------------------------------------
+	@InputMarker(name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
+	JEXData verAlign;
 	
-	/**
-	 * Returns the status of the input validity checking It is HIGHLY recommended to implement input checking however this can be over-ridden by returning false If over-ridden ANY batch function using this function will not be able perform error
-	 * checking...
-	 * 
-	 * @return true if input checking is on
-	 */
-	@Override
-	public boolean isInputValidityCheckingEnabled()
-	{
-		return true;
-	}
+	/////////// Define Parameters ///////////
+	
+	@ParameterMarker(uiOrder=1, name="Scale", description="The stitched image size will be scaled by this factor.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1.0")
+	double scale;
+	
+	@ParameterMarker(uiOrder=2, name="Output Bit Depth", description="Bit depth to save the image as.", ui=MarkerConstants.UI_DROPDOWN, choices={ "8", "16" }, defaultChoice=1)
+	int bitDepth;
+	
+	@ParameterMarker(uiOrder=3, name="Normalize Intensities Fit Bit Depth", description="Scale intensities to go from 0 to max value determined by new bit depth " +
+			"(\'true\' overrides intensity multiplier).", ui=MarkerConstants.UI_CHECKBOX,  defaultBoolean=true)
+	boolean normalize;
+	
+	@ParameterMarker(uiOrder=4, name="Intensity Multiplier", description="Number to multiply all intensities by before converting to new bitDepth.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1")
+	double multiplier;
+	
+	@ParameterMarker(uiOrder=5, name="Image Row Dim Name", description="Number of rows in the stitched image", ui=MarkerConstants.UI_TEXTFIELD, defaultText="ImRow")
+	String rowDimName;
+	
+	@ParameterMarker(uiOrder=6, name="Image Col Dim Name", description="Number of columns in the stitched image", ui=MarkerConstants.UI_TEXTFIELD, defaultText="ImCol")
+	String colDimName;
+	
+	/////////// Define Outputs ///////////
+	
+	@OutputMarker(name="Stitched Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant stitched image", enabled=true)
+	JEXData output1;
+
 	
 	// ----------------------------------------------------
 	// --------- THE ACTUAL MEAT OF THIS FUNCTION ---------
@@ -189,38 +111,28 @@ public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXCrunchable {
 	 * 
 	 */
 	@Override
-	public boolean run(JEXEntry entry, HashMap<String,JEXData> inputs)
+	public boolean run(JEXEntry optionalEntry)
 	{
 		// Collect the inputs
-		JEXData valueData = inputs.get("Horizontal Image Alignment");
-		if(valueData == null || !valueData.getTypeName().getType().equals(JEXData.VALUE))
+		if(horAlign == null || !horAlign.getTypeName().getType().equals(JEXData.VALUE))
 		{
 			return false;
 		}
-		CSVList alignmentInfoHor = new CSVList(ValueReader.readValueObject(valueData));
+		CSVList alignmentInfoHor = new CSVList(ValueReader.readValueObject(horAlign));
 		int horDxImage = Integer.parseInt(alignmentInfoHor.get(0));
 		int horDyImage = Integer.parseInt(alignmentInfoHor.get(1));
 		
 		// Collect the inputs
-		valueData = inputs.get("Vertical Image Alignment");
-		if(valueData == null || !valueData.getTypeName().getType().equals(JEXData.VALUE))
+		if(verAlign == null || !verAlign.getTypeName().getType().equals(JEXData.VALUE))
 		{
 			return false;
 		}
-		CSVList alignmentInfoVer = new CSVList(ValueReader.readValueObject(valueData));
+		CSVList alignmentInfoVer = new CSVList(ValueReader.readValueObject(verAlign));
 		int verDxImage = Integer.parseInt(alignmentInfoVer.get(0));
 		int verDyImage = Integer.parseInt(alignmentInfoVer.get(1));
 		
-		// Collect saving parameters
-		int bitDepth = Integer.parseInt(parameters.getValueOfParameter("Output Bit Depth"));
-		boolean normalize = Boolean.parseBoolean(parameters.getValueOfParameter("Normalize Intensities Fit Bit Depth"));
-		double multiplier = Double.parseDouble(parameters.getValueOfParameter("Intensity Multiplier"));
-		double scale = Double.parseDouble(parameters.getValueOfParameter("Scale"));
-		String rowDimName = parameters.getValueOfParameter("Image Row Dim Name");
-		String colDimName = parameters.getValueOfParameter("Image Col Dim Name");
 		
-		// Collect the inputs
-		JEXData imageData = inputs.get("Image Set");
+		// Check the inputs
 		if(imageData == null || !imageData.getTypeName().getType().equals(JEXData.IMAGE))
 		{
 			return false;
@@ -252,7 +164,7 @@ public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXCrunchable {
 			try
 			{
 				List<DimensionMap> mapsToGet = getMapsForStitching(rowDim, colDim, partialMap);
-				File stitchedFile = CTC_JEX_ImageTools_Stitch_Coord.stitch(entry, imageData, mapsToGet, imageCoords, scale, normalize, multiplier, bitDepth);
+				File stitchedFile = CTC_JEX_ImageTools_Stitch_Coord.stitch(optionalEntry, imageData, mapsToGet, imageCoords, scale, normalize, multiplier, bitDepth);
 				stitchedImageFilePaths.put(partialMap, stitchedFile.getAbsolutePath());
 			}
 			catch (Exception e)
@@ -263,10 +175,7 @@ public class CTC_JEX_ImageTools_Stitch_NDRectCoord extends JEXCrunchable {
 			
 		}
 		
-		JEXData output1 = ImageWriter.makeImageStackFromPaths(outputNames[0].getName(), stitchedImageFilePaths);
-		
-		// Set the outputs
-		realOutputs.add(output1);
+		output1 = ImageWriter.makeImageStackFromPaths("Stitched Image", stitchedImageFilePaths);
 		
 		// Return status
 		return true;
