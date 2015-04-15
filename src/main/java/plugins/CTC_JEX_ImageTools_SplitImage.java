@@ -1,5 +1,15 @@
 package plugins;
 
+import java.io.File;
+import java.util.TreeMap;
+import java.util.Vector;
+
+import jex.statics.JEXStatics;
+
+import org.scijava.plugin.Plugin;
+
+import tables.DimTable;
+import tables.DimensionMap;
 import Database.DBObjects.JEXData;
 import Database.DBObjects.JEXEntry;
 import Database.DataReader.ImageReader;
@@ -10,15 +20,6 @@ import function.plugin.mechanism.JEXPlugin;
 import function.plugin.mechanism.MarkerConstants;
 import function.plugin.mechanism.OutputMarker;
 import function.plugin.mechanism.ParameterMarker;
-
-import java.io.File;
-import java.util.TreeMap;
-
-import org.scijava.plugin.Plugin;
-
-import jex.statics.JEXStatics;
-import tables.DimTable;
-import tables.DimensionMap;
 
 /**
  * This is a JEXperiment function template To use it follow the following instructions
@@ -75,7 +76,7 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
 	/////////// Define Outputs ///////////
 	
 	@OutputMarker(name="Split Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant split image stack", enabled=true)
-	JEXData output;
+	Vector<JEXData> output = new Vector<JEXData>();
 
 	// ----------------------------------------------------
 	// --------- THE ACTUAL MEAT OF THIS FUNCTION ---------
@@ -118,7 +119,7 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
 				percentage = (int) (100 * ((double) (count) / ((double) imageMap.size())));
 				JEXStatics.statusBar.setProgressPercentage(percentage);
 			}
-			output = ImageWriter.makeImageStackFromPaths(imageData.name + " " + dim + " " + subTable.getDimWithName(dim).min(), splitImageMap);
+			output.add(ImageWriter.makeImageStackFromPaths(imageData.name + " " + dim + " " + subTable.getDimWithName(dim).min(), splitImageMap));
 			
 		}
 		if(output == null)
