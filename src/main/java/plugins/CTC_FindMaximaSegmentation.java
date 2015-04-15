@@ -77,10 +77,10 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 		
-	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be processed.", optional=false)
+	@InputMarker(uiOrder=1, name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be processed.", optional=false)
 	JEXData imageData;
 	
-	@InputMarker(name="ROI (optional)", type=MarkerConstants.TYPE_ROI, description="Roi to be processed.", optional=true)
+	@InputMarker(uiOrder=2, name="ROI (optional)", type=MarkerConstants.TYPE_ROI, description="Roi to be processed.", optional=true)
 	JEXData roiData;
 	
 	/////////// Define Parameters ///////////
@@ -125,16 +125,16 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Maxima", type=MarkerConstants.TYPE_ROI, flavor="", description="The Roi of maxima", enabled=true)
+	@OutputMarker(uiOrder=1, name="Maxima", type=MarkerConstants.TYPE_ROI, flavor="", description="The Roi of maxima", enabled=true)
 	JEXData output0;
 	
-	@OutputMarker(name="XY List", type=MarkerConstants.TYPE_FILE, flavor="", description="The coordinate list of maxima", enabled=true)
+	@OutputMarker(uiOrder=2, name="XY List", type=MarkerConstants.TYPE_FILE, flavor="", description="The coordinate list of maxima", enabled=true)
 	JEXData output1;
 	
-	@OutputMarker(name="Counts", type=MarkerConstants.TYPE_FILE, flavor="", description="The total number of maxima", enabled=true)
+	@OutputMarker(uiOrder=3, name="Counts", type=MarkerConstants.TYPE_FILE, flavor="", description="The total number of maxima", enabled=true)
 	JEXData output2;
 	
-	@OutputMarker(name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant segmented image", enabled=true)
+	@OutputMarker(uiOrder=4, name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant segmented image", enabled=true)
 	JEXData output3;
 
 	// ----------------------------------------------------

@@ -48,7 +48,7 @@ public class CTC_Filters extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 		
-	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be adjusted.", optional=false)
+	@InputMarker(uiOrder=1, name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be adjusted.", optional=false)
 	JEXData imageData;
 	
 	/////////// Define Parameters ///////////
@@ -64,7 +64,7 @@ public class CTC_Filters extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Filtered Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant filtered image", enabled=true)
+	@OutputMarker(uiOrder=1, name="Filtered Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant filtered image", enabled=true)
 	JEXData output;
 	
 	@Override

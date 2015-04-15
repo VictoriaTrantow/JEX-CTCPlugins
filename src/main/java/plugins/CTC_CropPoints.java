@@ -71,10 +71,10 @@ public class CTC_CropPoints extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 		
-	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be processed.", optional=false)
+	@InputMarker(uiOrder=1, name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be processed.", optional=false)
 	JEXData imageFiles;
 	
-	@InputMarker(name="Maxima", type=MarkerConstants.TYPE_ROI, description="Maxima Roi to be processed.", optional=false)
+	@InputMarker(uiOrder=2, name="Maxima", type=MarkerConstants.TYPE_ROI, description="Maxima Roi to be processed.", optional=false)
 	JEXData pointData;
 	
 	/////////// Define Parameters ///////////
@@ -87,10 +87,10 @@ public class CTC_CropPoints extends JEXPlugin {
 
 	/////////// Define Outputs ///////////
 
-	@OutputMarker(name="Cropped Images", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant cropped images", enabled=true)
+	@OutputMarker(uiOrder=1, name="Cropped Images", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant cropped images", enabled=true)
 	JEXData output1;
 	
-	@OutputMarker(name="Single Points", type=MarkerConstants.TYPE_ROI, flavor="", description="The resultant single points", enabled=true)
+	@OutputMarker(uiOrder=2, name="Single Points", type=MarkerConstants.TYPE_ROI, flavor="", description="The resultant single points", enabled=true)
 	JEXData output2;
 	
 	// ----------------------------------------------------

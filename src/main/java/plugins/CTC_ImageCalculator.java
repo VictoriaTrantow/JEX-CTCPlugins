@@ -35,10 +35,10 @@ public class CTC_ImageCalculator extends JEXPlugin {
 
 	/////////// Define Inputs ///////////
 
-	@InputMarker(name="Image A", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=1, name="Image A", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData imageAData;
 
-	@InputMarker(name="Image B", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=2, name="Image B", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData imageBData;
 
 	/////////// Define Parameters ///////////
@@ -51,7 +51,7 @@ public class CTC_ImageCalculator extends JEXPlugin {
 
 	/////////// Define Outputs ///////////
 
-	@OutputMarker(name="Calculated Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="", enabled=true)
+	@OutputMarker(uiOrder=1, name="Calculated Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="", enabled=true)
 	JEXData output;
 
 

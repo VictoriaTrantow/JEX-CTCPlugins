@@ -66,13 +66,13 @@ public class CTC_Stitch_NDRectCoord extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 		
-	@InputMarker(name="Image Set", type=MarkerConstants.TYPE_IMAGE, description="Image to be stitched up.", optional=false)
+	@InputMarker(uiOrder=1, name="Image Set", type=MarkerConstants.TYPE_IMAGE, description="Image to be stitched up.", optional=false)
 	JEXData imageData;
 	
-	@InputMarker(name="Horizontal Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Horizontal Image Aligment in pixels", optional=false)
+	@InputMarker(uiOrder=2, name="Horizontal Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Horizontal Image Aligment in pixels", optional=false)
 	JEXData horAlign;
 	
-	@InputMarker(name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
+	@InputMarker(uiOrder=3, name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
 	JEXData verAlign;
 	
 	/////////// Define Parameters ///////////
@@ -98,7 +98,7 @@ public class CTC_Stitch_NDRectCoord extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Stitched Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant stitched image", enabled=true)
+	@OutputMarker(uiOrder=1, name="Stitched Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant stitched image", enabled=true)
 	JEXData output1;
 
 	

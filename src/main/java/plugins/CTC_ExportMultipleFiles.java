@@ -59,34 +59,34 @@ public class CTC_ExportMultipleFiles extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 	
-	@InputMarker(name="File 1", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=1, name="File 1", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp1;
 	
-	@InputMarker(name="File 2", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=2, name="File 2", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp2;
 	
-	@InputMarker(name="File 3", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=3, name="File 3", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp3;
 	
-	@InputMarker(name="File 4", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=4, name="File 4", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp4;
 	
-	@InputMarker(name="File 5", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=5, name="File 5", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp5;
 	
-	@InputMarker(name="File 6", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=6, name="File 6", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp6;
 	
-	@InputMarker(name="File 7", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=7, name="File 7", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp7;
 	
-	@InputMarker(name="File 8", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=8, name="File 8", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp8;
 	
-	@InputMarker(name="File 9", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=9, name="File 9", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp9;
 	
-	@InputMarker(name="File 10", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
+	@InputMarker(uiOrder=10, name="File 10", type=MarkerConstants.TYPE_FILE, description="Files to be exported", optional=false)
 	JEXData temp10;
 	
 	/////////// Define Parameters ///////////

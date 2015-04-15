@@ -45,10 +45,10 @@ public class CTC_ThresholdBGNoise extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 	
-	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be adjusted.", optional=false)
+	@InputMarker(uiOrder=1, name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be adjusted.", optional=false)
 	JEXData imageData;
 	
-	@InputMarker(name="Roi (Optional)", type=MarkerConstants.TYPE_ROI, description="Image to be adjusted.", optional=true)
+	@InputMarker(uiOrder=2, name="Roi (Optional)", type=MarkerConstants.TYPE_ROI, description="Image to be adjusted.", optional=true)
 	JEXData roiData;
 	
 	/////////// Define Parameters ///////////
@@ -67,13 +67,13 @@ public class CTC_ThresholdBGNoise extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Thresholded Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant thresholded image", enabled=true)
+	@OutputMarker(uiOrder=1, name="Thresholded Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant thresholded image", enabled=true)
 	JEXData outputImage;
 	
-	@OutputMarker(name="Stats", type=MarkerConstants.TYPE_FILE, flavor="", description="The measures and stats used to determine the thresholds", enabled=true)
+	@OutputMarker(uiOrder=2, name="Stats", type=MarkerConstants.TYPE_FILE, flavor="", description="The measures and stats used to determine the thresholds", enabled=true)
 	JEXData outputStats;
 
-	@OutputMarker(name="Thresholds", type=MarkerConstants.TYPE_FILE, flavor="", description="The resultant calculated thresholds based on the number of sigma set by the user.", enabled=true)
+	@OutputMarker(uiOrder=3, name="Thresholds", type=MarkerConstants.TYPE_FILE, flavor="", description="The resultant calculated thresholds based on the number of sigma set by the user.", enabled=true)
 	JEXData outputThresholds;
 	
 	@Override

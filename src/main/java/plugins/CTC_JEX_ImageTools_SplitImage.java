@@ -60,7 +60,7 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 		
-	@InputMarker(name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be splited up.", optional=false)
+	@InputMarker(uiOrder=1, name="Image", type=MarkerConstants.TYPE_IMAGE, description="Image to be splited up.", optional=false)
 	JEXData imageData;
 	
 	/////////// Define Parameters ///////////
@@ -75,7 +75,7 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Split Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant split image stack", enabled=true)
+	@OutputMarker(uiOrder=1, name="Split Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant split image stack", enabled=true)
 	Vector<JEXData> output = new Vector<JEXData>();
 
 	// ----------------------------------------------------

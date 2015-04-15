@@ -57,16 +57,16 @@ public class CTC_SingleCellQuantification extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 	
-	@InputMarker(name="Maxima", type=MarkerConstants.TYPE_ROI, description="Maxima that define cell locations/id's", optional=false)
+	@InputMarker(uiOrder=1, name="Maxima", type=MarkerConstants.TYPE_ROI, description="Maxima that define cell locations/id's", optional=false)
 	JEXData maximaData;
 	
-	@InputMarker(name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, description="Segmentation image", optional=false)
+	@InputMarker(uiOrder=2, name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, description="Segmentation image", optional=false)
 	JEXData segData;
 	
-	@InputMarker(name="Mask Image", type=MarkerConstants.TYPE_IMAGE, description="Black and white (i.e., binary) image that defines cell regions to be used in conjunction with the maxima defining cell locations.", optional=false)
+	@InputMarker(uiOrder=3, name="Mask Image", type=MarkerConstants.TYPE_IMAGE, description="Black and white (i.e., binary) image that defines cell regions to be used in conjunction with the maxima defining cell locations.", optional=false)
 	JEXData maskData;
 	
-	@InputMarker(name="Image To Quantify", type=MarkerConstants.TYPE_IMAGE, description="Image to be quantified.", optional=false)
+	@InputMarker(uiOrder=4, name="Image To Quantify", type=MarkerConstants.TYPE_IMAGE, description="Image to be quantified.", optional=false)
 	JEXData imageData;
 	
 	/////////// Define Parameters ///////////
@@ -75,7 +75,7 @@ public class CTC_SingleCellQuantification extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 	
-	@OutputMarker(name="Cell Measurements", type=MarkerConstants.TYPE_FILE, flavor="", description="The single-cell measurements", enabled=true)
+	@OutputMarker(uiOrder=1, name="Cell Measurements", type=MarkerConstants.TYPE_FILE, flavor="", description="The single-cell measurements", enabled=true)
 	JEXData output;
 
 	public int getMaxThreads()
