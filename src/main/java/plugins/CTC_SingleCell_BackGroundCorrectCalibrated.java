@@ -48,9 +48,9 @@ import tables.DimensionMap;
 		visible=true,
 		description="Subtract background of image and correct for uneven illumination using calibration images"
 		)
-public class CTC_JEX_SingleCell_BackGroundCorrectCalibrated extends JEXPlugin {
+public class CTC_SingleCell_BackGroundCorrectCalibrated extends JEXPlugin {
 
-	public CTC_JEX_SingleCell_BackGroundCorrectCalibrated() {}
+	public CTC_SingleCell_BackGroundCorrectCalibrated() {}
 
 	/////////// Define Inputs ///////////
 
