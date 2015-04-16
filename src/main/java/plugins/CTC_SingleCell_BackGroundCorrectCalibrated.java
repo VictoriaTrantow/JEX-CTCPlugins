@@ -50,16 +50,16 @@ public class CTC_SingleCell_BackGroundCorrectCalibrated extends JEXPlugin {
 
 	/////////// Define Inputs ///////////
 
-	@InputMarker(name="Images", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=0, name="Images", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData data;
 	
-	@InputMarker(name="DF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=1, name="DF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData darkData;
 	
-	@InputMarker(name="IF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=2, name="IF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData illumData;
 	
-	@InputMarker(name="Optional Crop ROI", type=MarkerConstants.TYPE_ROI, description="", optional=false)
+	@InputMarker(uiOrder=3, name="Optional Crop ROI", type=MarkerConstants.TYPE_ROI, description="", optional=false)
 	JEXData roiData;
 
 	/////////// Define Parameters ///////////
@@ -90,7 +90,7 @@ public class CTC_SingleCell_BackGroundCorrectCalibrated extends JEXPlugin {
 	
 	/////////// Define Outputs ///////////
 
-	@OutputMarker(name="Adjusted Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="Background subtracted using background subtraction function", enabled=true)
+	@OutputMarker(uiOrder=0, name="Adjusted Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="Background subtracted using background subtraction function", enabled=true)
 	JEXData output;
 
 	@Override
