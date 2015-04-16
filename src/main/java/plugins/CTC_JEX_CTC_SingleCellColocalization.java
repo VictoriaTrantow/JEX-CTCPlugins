@@ -93,7 +93,7 @@ public class CTC_JEX_CTC_SingleCellColocalization extends JEXPlugin {
 	@ParameterMarker(uiOrder=3, name="Method", description="Which method to use to calculate the colocalization.", ui=MarkerConstants.UI_DROPDOWN, choices={ "Max-Norm", "Min-Contain" }, defaultChoice=1)
 	String method;
 	
-	@ParameterMarker(uiOrder=0, name="Window Offset", description="The offeset between the signal and window when fitting the window under the signal curve using the Min-Contain method only.\nLeave blank to use the artificial bg level.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
+	@ParameterMarker(uiOrder=4, name="Window Offset", description="The offeset between the signal and window when fitting the window under the signal curve using the Min-Contain method only.\nLeave blank to use the artificial bg level.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
 	String offsetString;
 
 	/////////// Define Outputs ///////////
