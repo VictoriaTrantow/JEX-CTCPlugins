@@ -5,11 +5,8 @@ import Database.DBObjects.JEXEntry;
 import Database.DataReader.ImageReader;
 import Database.DataReader.RoiReader;
 import Database.DataWriter.ImageWriter;
-import Database.Definition.Parameter;
-import Database.Definition.ParameterSet;
-import Database.Definition.TypeName;
+
 import Database.SingleUserDatabase.JEXWriter;
-import function.JEXCrunchable;
 import function.imageUtility.jBackgroundSubtracter;
 import function.plugin.mechanism.InputMarker;
 import function.plugin.mechanism.JEXPlugin;
@@ -23,7 +20,6 @@ import ij.process.FloatProcessor;
 import ij.process.FloatStatistics;
 import image.roi.ROIPlus;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.scijava.plugin.Plugin;
