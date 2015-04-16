@@ -41,11 +41,11 @@ import jex.statics.JEXStatics;
 		description="Treat an image object as a stack and calculate the mean "
 				+ "stack intensity."
 		)
-public class CTC_JEX_MakeCalibrationImageFromObject extends JEXPlugin {
+public class CTC_MakeCalibrationImageFromObject extends JEXPlugin {
 
 	public static ImagePlus calibrationImage = null;
 
-	public CTC_JEX_MakeCalibrationImageFromObject()
+	public CTC_MakeCalibrationImageFromObject()
 	{}
 
 	/////////// Define Inputs ///////////
