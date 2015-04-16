@@ -39,7 +39,7 @@ import tables.DimensionMap;
 		visible=true,
 		description="Overlay color images with the segmentation and boundary masks."
 		)
-public class CTC_JEX_SingleCell_SegmentedMaskOverlay extends JEXPlugin {
+public class CTC_SegmentedMaskOverlay extends JEXPlugin {
 	
 	// ----------------------------------------------------
 	// --------- INFORMATION ABOUT THE FUNCTION -----------
