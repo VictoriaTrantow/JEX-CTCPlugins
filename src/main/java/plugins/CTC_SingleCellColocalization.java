@@ -60,9 +60,9 @@ import weka.core.converters.JEXTableWriter;
 		description="Calculate the spatial correlation coefficient between "
 				+ "colors in masked/identified regions."
 		)
-public class CTC_JEX_CTC_SingleCellColocalization extends JEXPlugin {
+public class CTC_SingleCellColocalization extends JEXPlugin {
 
-	public CTC_JEX_CTC_SingleCellColocalization()
+	public CTC_SingleCellColocalization()
 	{}
 
 	/////////// Define Inputs ///////////
