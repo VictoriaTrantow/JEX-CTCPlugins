@@ -39,9 +39,9 @@ import function.plugin.mechanism.ParameterMarker;
 		visible=true,
 		description="Split and image set along a dimension. (e.g., split multicolor image set into image sets with an individual color)"
 		)
-public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
+public class CTC_SplitImage extends JEXPlugin {
 	
-	public CTC_JEX_ImageTools_SplitImage()
+	public CTC_SplitImage()
 	{}
 	
 	// ----------------------------------------------------
@@ -122,7 +122,7 @@ public class CTC_JEX_ImageTools_SplitImage extends JEXPlugin {
 			output.add(ImageWriter.makeImageStackFromPaths(imageData.name + " " + dim + " " + subTable.getDimWithName(dim).min(), splitImageMap));
 			
 		}
-		if(output == null)
+		if(output.size() == 0)
 		{
 			return false;
 		}
