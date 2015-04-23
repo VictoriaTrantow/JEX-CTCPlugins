@@ -49,15 +49,15 @@ public class CTC_SingleCell_BackGroundCorrectCalibrated extends JEXPlugin {
 	public CTC_SingleCell_BackGroundCorrectCalibrated() {}
 
 	/////////// Define Inputs ///////////
-
-	@InputMarker(uiOrder=0, name="Images", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
-	JEXData data;
 	
-	@InputMarker(uiOrder=1, name="DF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=0, name="DF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData darkData;
 	
-	@InputMarker(uiOrder=2, name="IF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	@InputMarker(uiOrder=1, name="IF Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData illumData;
+	
+	@InputMarker(uiOrder=2, name="Images", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
+	JEXData data;
 	
 	@InputMarker(uiOrder=3, name="Optional Crop ROI", type=MarkerConstants.TYPE_ROI, description="", optional=false)
 	JEXData roiData;
