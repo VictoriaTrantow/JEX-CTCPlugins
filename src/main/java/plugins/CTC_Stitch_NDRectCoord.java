@@ -65,37 +65,37 @@ public class CTC_Stitch_NDRectCoord extends JEXPlugin {
 	// ----------------------------------------------------
 	
 	/////////// Define Inputs ///////////
+	
+	@InputMarker(uiOrder=0, name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
+	JEXData verAlign;
 		
 	@InputMarker(uiOrder=1, name="Image Set", type=MarkerConstants.TYPE_IMAGE, description="Image to be stitched up.", optional=false)
 	JEXData imageData;
 	
 	@InputMarker(uiOrder=2, name="Horizontal Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Horizontal Image Aligment in pixels", optional=false)
 	JEXData horAlign;
-	
-	@InputMarker(uiOrder=3, name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
-	JEXData verAlign;
-	
+		
 	/////////// Define Parameters ///////////
 	
-	@ParameterMarker(uiOrder=1, name="Scale", description="The stitched image size will be scaled by this factor.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1.0")
+	@ParameterMarker(uiOrder=0, name="Image Row Dim Name", description="Number of rows in the stitched image", ui=MarkerConstants.UI_TEXTFIELD, defaultText="ImRow")
+	String rowDimName;
+	
+	@ParameterMarker(uiOrder=1, name="Image Col Dim Name", description="Number of columns in the stitched image", ui=MarkerConstants.UI_TEXTFIELD, defaultText="ImCol")
+	String colDimName;
+	
+	@ParameterMarker(uiOrder=2, name="Scale", description="The stitched image size will be scaled by this factor.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1.0")
 	double scale;
 	
-	@ParameterMarker(uiOrder=2, name="Output Bit Depth", description="Bit depth to save the image as.", ui=MarkerConstants.UI_DROPDOWN, choices={ "8", "16" }, defaultChoice=1)
+	@ParameterMarker(uiOrder=3, name="Output Bit Depth", description="Bit depth to save the image as.", ui=MarkerConstants.UI_DROPDOWN, choices={ "8", "16" }, defaultChoice=1)
 	int bitDepth;
 	
-	@ParameterMarker(uiOrder=3, name="Normalize Intensities Fit Bit Depth", description="Scale intensities to go from 0 to max value determined by new bit depth " +
+	@ParameterMarker(uiOrder=4, name="Normalize Intensities Fit Bit Depth", description="Scale intensities to go from 0 to max value determined by new bit depth " +
 			"(\'true\' overrides intensity multiplier).", ui=MarkerConstants.UI_CHECKBOX,  defaultBoolean=true)
 	boolean normalize;
 	
-	@ParameterMarker(uiOrder=4, name="Intensity Multiplier", description="Number to multiply all intensities by before converting to new bitDepth.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1")
+	@ParameterMarker(uiOrder=5, name="Intensity Multiplier", description="Number to multiply all intensities by before converting to new bitDepth.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="1")
 	double multiplier;
-	
-	@ParameterMarker(uiOrder=5, name="Image Row Dim Name", description="Number of rows in the stitched image", ui=MarkerConstants.UI_TEXTFIELD, defaultText="ImRow")
-	String rowDimName;
-	
-	@ParameterMarker(uiOrder=6, name="Image Col Dim Name", description="Number of columns in the stitched image", ui=MarkerConstants.UI_TEXTFIELD, defaultText="ImCol")
-	String colDimName;
-	
+		
 	/////////// Define Outputs ///////////
 	
 	@OutputMarker(uiOrder=1, name="Stitched Image", type=MarkerConstants.TYPE_IMAGE, flavor="", description="The resultant stitched image", enabled=true)
