@@ -66,14 +66,14 @@ public class CTC_Stitch_NDRectCoord extends JEXPlugin {
 	
 	/////////// Define Inputs ///////////
 	
-	@InputMarker(uiOrder=0, name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
+	@InputMarker(uiOrder=1, name="Horizontal Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Horizontal Image Aligment in pixels", optional=false)
+	JEXData horAlign;
+	
+	@InputMarker(uiOrder=2, name="Vertical Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Vertical Image Aligment in pixels", optional=false)
 	JEXData verAlign;
 		
-	@InputMarker(uiOrder=1, name="Image Set", type=MarkerConstants.TYPE_IMAGE, description="Image to be stitched up.", optional=false)
-	JEXData imageData;
-	
-	@InputMarker(uiOrder=2, name="Horizontal Image Alignment", type=MarkerConstants.TYPE_VALUE, description="Horizontal Image Aligment in pixels", optional=false)
-	JEXData horAlign;
+	@InputMarker(uiOrder=3, name="Image Set", type=MarkerConstants.TYPE_IMAGE, description="Image to be stitched up.", optional=false)
+	JEXData imageData;	
 		
 	/////////// Define Parameters ///////////
 	
