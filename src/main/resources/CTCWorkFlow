@@ -45,17 +45,17 @@
 'CTC - Find Maxima Segmentation',__Outputs__,1,3,Value,'File,XY List,0'
 'CTC - Find Maxima Segmentation',__Outputs__,2,3,Value,'File,Counts,0'
 'CTC - Find Maxima Segmentation',__Outputs__,3,3,Value,'Image,Segmented Image,0'
-'CTC - Find Maxima Segmentation',__Parameters__,'Color Dim Name',3,Value,Color
+'CTC - Find Maxima Segmentation',__Parameters__,'Color Dim Name',3,Value,Time
 'CTC - Find Maxima Segmentation',__Parameters__,'Exclude Maximima on Edges?',3,Value,true
 'CTC - Find Maxima Segmentation',__Parameters__,'Exclude Segments on Edges?',3,Value,true
 'CTC - Find Maxima Segmentation',__Parameters__,'Is EDM?',3,Value,false
-'CTC - Find Maxima Segmentation',__Parameters__,'Maxima Color Dim Value',3,Value,2
+'CTC - Find Maxima Segmentation',__Parameters__,'Maxima Color Dim Value',3,Value,1
 'CTC - Find Maxima Segmentation',__Parameters__,'Output Maxima Only?',3,Value,false
 'CTC - Find Maxima Segmentation',__Parameters__,'Particles Are White?',3,Value,true
 'CTC - Find Maxima Segmentation',__Parameters__,'Pre-Despeckle Radius',3,Value,1.7
 'CTC - Find Maxima Segmentation',__Parameters__,'Pre-Smoothing Radius',3,Value,4
-'CTC - Find Maxima Segmentation',__Parameters__,'Segmentation Color Dim Value',3,Value,2
-'CTC - Find Maxima Segmentation',__Parameters__,Threshold,3,Value,6000
+'CTC - Find Maxima Segmentation',__Parameters__,'Segmentation Color Dim Value',3,Value,1
+'CTC - Find Maxima Segmentation',__Parameters__,Threshold,3,Value,4000
 'CTC - Find Maxima Segmentation',__Parameters__,Tolerance,3,Value,50
 'CTC - Find Maxima Segmentation',__SavingSelections__,0,3,Value,true
 'CTC - Find Maxima Segmentation',__SavingSelections__,1,3,Value,true
@@ -68,7 +68,7 @@
 'CTC - Image Calculator',__Outputs__,0,10,Value,'Image,Cell Area,0'
 'CTC - Image Calculator',__Outputs__,0,13,Value,'Image,FINAL (Seg),0'
 'CTC - Image Calculator',__Parameters__,'Math Operation',10,Value,OR
-'CTC - Image Calculator',__Parameters__,'Math Operation',13,Value,A+B
+'CTC - Image Calculator',__Parameters__,'Math Operation',13,Value,A*B
 'CTC - Image Calculator',__Parameters__,'Output Bit-Depth',10,Value,8
 'CTC - Image Calculator',__Parameters__,'Output Bit-Depth',13,Value,16
 'CTC - Image Calculator',__SavingSelections__,0,10,Value,true
