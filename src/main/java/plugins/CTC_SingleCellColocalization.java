@@ -1,16 +1,5 @@
 package plugins;
 
-import Database.DBObjects.JEXData;
-import Database.DBObjects.JEXEntry;
-import Database.DataReader.ImageReader;
-import Database.DataReader.RoiReader;
-import Database.DataWriter.FileWriter;
-import Database.Definition.Type;
-import function.plugin.mechanism.InputMarker;
-import function.plugin.mechanism.JEXPlugin;
-import function.plugin.mechanism.MarkerConstants;
-import function.plugin.mechanism.OutputMarker;
-import function.plugin.mechanism.ParameterMarker;
 import ij.ImagePlus;
 import ij.gui.PolygonRoi;
 import ij.gui.Roi;
@@ -30,16 +19,28 @@ import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.scijava.plugin.Plugin;
-
 import jex.statics.JEXStatics;
 import miscellaneous.Canceler;
 import miscellaneous.Pair;
 import miscellaneous.StatisticsUtility;
+
+import org.scijava.plugin.Plugin;
+
 import tables.Dim;
 import tables.DimTable;
 import tables.DimensionMap;
 import weka.core.converters.JEXTableWriter;
+import Database.DBObjects.JEXData;
+import Database.DBObjects.JEXEntry;
+import Database.DataReader.ImageReader;
+import Database.DataReader.RoiReader;
+import Database.DataWriter.FileWriter;
+import Database.Definition.Type;
+import function.plugin.mechanism.InputMarker;
+import function.plugin.mechanism.JEXPlugin;
+import function.plugin.mechanism.MarkerConstants;
+import function.plugin.mechanism.OutputMarker;
+import function.plugin.mechanism.ParameterMarker;
 
 /**
  * Calculate the spatial correlation coefficient between 
@@ -58,61 +59,61 @@ import weka.core.converters.JEXTableWriter;
 				+ "colors in masked/identified regions."
 		)
 public class CTC_SingleCellColocalization extends JEXPlugin {
-
+	
 	public CTC_SingleCellColocalization()
 	{}
-
+	
 	/////////// Define Inputs ///////////
-
+	
 	@InputMarker(uiOrder=0, name="Maxima", type=MarkerConstants.TYPE_ROI, description="", optional=false)
 	JEXData maximaData;
-
+	
 	@InputMarker(uiOrder=1, name="Segmented Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData segData;
 	
 	@InputMarker(uiOrder=2, name="Mask Image", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData maskData;
-
+	
 	@InputMarker(uiOrder=3, name="Image to Quantify", type=MarkerConstants.TYPE_IMAGE, description="", optional=false)
 	JEXData imageData;
-
+	
 	/////////// Define Parameters ///////////
-
+	
 	@ParameterMarker(uiOrder=0, name="Color Dim Name", description="Name of the color dimension.", ui=MarkerConstants.UI_TEXTFIELD, defaultText = "Color")
 	String colorDimName;
-
+	
 	@ParameterMarker(uiOrder=1, name="Median Filter Radius", description="Radius of the median filter to apply before quantification (Use a value of 0 to avoid applying the filter).", ui=MarkerConstants.UI_TEXTFIELD, defaultText="0")
 	double filterRadius;
 	
 	@ParameterMarker(uiOrder=2, name="Artificial BG Level", description="Enter the amount that was artificially added to the BG during BG Correction. This will be subtracted before analysis.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="100")
 	double bg;
-
-	@ParameterMarker(uiOrder=3, name="Method", description="Which method to use to calculate the colocalization.", ui=MarkerConstants.UI_DROPDOWN, choices={ "Max-Norm", "Min-Contain" }, defaultChoice=1)
-	String method;
 	
-	@ParameterMarker(uiOrder=4, name="Window Offset", description="The offeset between the signal and window when fitting the window under the signal curve using the Min-Contain method only.\nLeave blank to use the artificial bg level.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
-	String offsetString;
-
+	//	@ParameterMarker(uiOrder=3, name="Method", description="Which method to use to calculate the colocalization.", ui=MarkerConstants.UI_DROPDOWN, choices={ "Max-Norm", "Min-Contain" }, defaultChoice=0)
+	String method = "Max-Norm";
+	
+	//	@ParameterMarker(uiOrder=4, name="Window Offset", description="The offeset between the signal and window when fitting the window under the signal curve using the Min-Contain method only.\nLeave blank to use the artificial bg level.", ui=MarkerConstants.UI_TEXTFIELD, defaultText="")
+	//	String offsetString;
+	
 	/////////// Define Outputs ///////////
-
+	
 	@OutputMarker(uiOrder=0, name="Cell Measurements", type=MarkerConstants.TYPE_FILE, flavor="", description="", enabled=true)
 	JEXData output;
-
-
+	
+	
 	@Override
 	public int getMaxThreads()
 	{
 		return 10;
 	}
-
+	
 	
 	public static String[] binaryMeasures = new String[] { "AREA", "PERIMETER", "CIRCULARITY" };
 	public static String[] grayscaleMeasures = new String[] { "MEAN", "MEDIAN", "MIN", "MAX", "SUM", "STDDEV", "VARIANCE" };
-
+	
 	// ----------------------------------------------------
 	// --------- THE ACTUAL MEAT OF THIS FUNCTION ---------
 	// ----------------------------------------------------
-
+	
 	/**
 	 * Perform the algorithm here
 	 * 
@@ -140,25 +141,24 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 			{
 				return false;
 			}
-
 			
 			// validate parameters
 			double offset = bg;
-			if(!offsetString.equals(""))
-			{
-				Double.parseDouble(offsetString);
-			}
-
+			//			if(!offsetString.equals(""))
+			//			{
+			//				Double.parseDouble(offsetString);
+			//			}
+			
 			
 			// Set color thresholds
 			DimTable imageTable = imageData.getDimTable();
-
+			
 			TreeMap<DimensionMap,ROIPlus> maximaMap = RoiReader.readObjectToRoiMap(maximaData);
 			TreeMap<DimensionMap,String> segMap = ImageReader.readObjectToImagePathTable(segData);
 			TreeMap<DimensionMap,String> maskMap = ImageReader.readObjectToImagePathTable(maskData);
 			TreeMap<DimensionMap,String> imageMap = ImageReader.readObjectToImagePathTable(imageData);
 			TreeMap<DimensionMap,Double> results = new TreeMap<DimensionMap,Double>();
-
+			
 			Dim colorDim = imageTable.getDimWithName(colorDimName);
 			DimTable colorlessTable = imageTable.copy();
 			colorlessTable.removeDimWithName(colorDimName);
@@ -197,10 +197,10 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 					JEXStatics.statusBar.setProgressPercentage((int) (100 * count / total));
 				}
 			}
-
+			
 			String resultsFile = JEXTableWriter.writeTable(this.output.name, results);
 			output = FileWriter.makeFileObject(this.output.name,null, resultsFile);
-
+			
 			// Return status
 			return true;
 		}
@@ -209,9 +209,9 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 			e.printStackTrace();
 			return false;
 		}
-
+		
 	}
-
+	
 	public double productSum(double[] x, double[] y)
 	{
 		double[] temp = new double[x.length];
@@ -221,7 +221,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return StatisticsUtility.sum(temp);
 	}
-
+	
 	public double[] getweights(Vector<Double> x, Vector<Double> y)
 	{
 		double[] ret = new double[x.size()];
@@ -233,7 +233,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return ret;
 	}
-
+	
 	public double weightedProductSum(double[] weights, double[] xdiffs, double[] ydiffs)
 	{
 		double[] temp = new double[xdiffs.length];
@@ -243,7 +243,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return StatisticsUtility.sum(temp);
 	}
-
+	
 	public double[] normDiffs(Vector<Double> nums)
 	{
 		double mu = StatisticsUtility.mean(nums);
@@ -256,7 +256,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return diffs;
 	}
-
+	
 	public double weightedMean(double[] weights, Vector<Double> x)
 	{
 		double numer = 0;
@@ -268,7 +268,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return numer / denom;
 	}
-
+	
 	public double[] weightedNormDiffs(double[] weights, Vector<Double> x)
 	{
 		double muX = this.weightedMean(weights, x);
@@ -280,7 +280,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return diffs;
 	}
-
+	
 	public Vector<DimensionMap> getPossibleCombinations(Dim d)
 	{
 		Vector<DimensionMap> ret = new Vector<DimensionMap>();
@@ -296,7 +296,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return ret;
 	}
-
+	
 	public TreeMap<String,Object> getPixelValues(Wand wand, IdPoint p, ByteProcessor impMask, FloatProcessor impImage1, FloatProcessor impImage2)
 	{
 		Vector<Double> m1 = null;
@@ -335,15 +335,15 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		ret.put("xy", pts);
 		return ret;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public TreeMap<DimensionMap,Double> runStuff(String method, String colorDimName, double bg, double offset, boolean segProvided, DimensionMap colors, DimensionMap map, TreeMap<DimensionMap,ROIPlus> maximaMap, TreeMap<DimensionMap,String> segMap, TreeMap<DimensionMap,String> maskMap, TreeMap<DimensionMap,String> imageMap, double filterRadius, Canceler canceler)
 	{
 		TreeMap<DimensionMap,Double> results = new TreeMap<DimensionMap,Double>();
-
+		
 		// Get the Maxima
 		ROIPlus maxima = maximaMap.get(map);
-
+		
 		// Make the mask image impMask
 		ByteProcessor impMask = (ByteProcessor) (new ImagePlus(maskMap.get(map)).getProcessor().convertToByte(false));
 		if(segProvided)
@@ -375,23 +375,23 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 				Vector<Double> m1 = (Vector<Double>) o.get("m1");
 				Vector<Double> m2 = (Vector<Double>) o.get("m2");
 				//PointList pts = (PointList) o.get("xy");
-
+				
 				if(m1.size() > 0)
 				{
 					// Use each signal as a window on the other and calculate the window fraction
 					Pair<Double,Double> frac12 = null, frac21 = null;
-
+					
 					if(method.equals("Max-Norm"))
 					{
-						frac12 = StatisticsUtility.windowFraction2(StatisticsUtility.add(-bg, m1), StatisticsUtility.add(-bg, m2));
-						frac21 = StatisticsUtility.windowFraction2(StatisticsUtility.add(-bg, m2), StatisticsUtility.add(-bg, m1));
+						frac12 = StatisticsUtility.windowFraction3(StatisticsUtility.add(-bg, m1), StatisticsUtility.add(-bg, m2));
+						frac21 = StatisticsUtility.windowFraction3(StatisticsUtility.add(-bg, m2), StatisticsUtility.add(-bg, m1));
 					}
 					else
 					{
 						frac12 = StatisticsUtility.windowFraction(StatisticsUtility.add(-bg, m1), StatisticsUtility.add(-bg, m2), offset);
 						frac21 = StatisticsUtility.windowFraction(StatisticsUtility.add(-bg, m2), StatisticsUtility.add(-bg, m1), offset);
 					}
-
+					
 					DimensionMap toSave = map.copy();
 					toSave.put("Id", "" + p.id);
 					toSave.put("Measurement", "Sig_" + colors.get("1") + colors.get("2") + "_Tot");
@@ -404,7 +404,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 					results.put(toSave.copy(), frac21.p2);
 					toSave.put("Measurement", "n");
 					results.put(toSave.copy(), (double) m1.size());
-
+					
 					// // Pearson's Correlation Coefficient
 					// double[] term1a = this.normDiffs(m1);
 					// double[] term1b = this.normDiffs(m2);
@@ -416,7 +416,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 					// toSave.put("Id", "" + p.id);
 					// toSave.put("Measurement", "R_" + colors.get("1") + colors.get("2"));
 					// results.put(toSave, R);
-
+					
 					// // Weighted Pearson's Correlation Coefficient
 					// double[] w = this.getweights(m1, m2);
 					// double[] term1a = this.weightedNormDiffs(w, m1);
@@ -429,7 +429,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 					// toSave.put("Id", "" + p.id);
 					// toSave.put("Measurement", "R_" + colors.get("1") + colors.get("2"));
 					// results.put(toSave, R);
-
+					
 					// // ICQ
 					// double muA = StatisticsUtility.median(m1);
 					// double muB = StatisticsUtility.median(m2);
@@ -475,7 +475,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 					// results.put(toSave.copy(), 2 * (count / tot - 0.5));
 					// toSave.put("Measurement", "n");
 					// results.put(toSave.copy(), tot);
-
+					
 					// // Sum of absolute difference of max normalized intensities
 					// double[] m1norm = StatisticsUtility.normalize(StatisticsUtility.add(-1 * bg, m1), true);
 					// double[] m2norm = StatisticsUtility.normalize(StatisticsUtility.add(-1 * bg, m2), true);
@@ -491,11 +491,11 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return results;
 	}
-
+	
 	public double[] normalize(Vector<Double> x, boolean maxOnly)
 	{
 		double[] ret = new double[x.size()];
-
+		
 		if(maxOnly)
 		{
 			double max = StatisticsUtility.max(x);
@@ -504,10 +504,10 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 				ret[i] = x.get(i) / max;
 			}
 		}
-
+		
 		return ret;
 	}
-
+	
 	public static JEXData getInputAs(HashMap<String,JEXData> inputs, String name, Type type)
 	{
 		JEXData data = inputs.get(name);
@@ -517,7 +517,7 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		}
 		return data;
 	}
-
+	
 	// private String saveAdjustedImage(String imagePath, double oldMin, double
 	// oldMax, double newMin, double newMax, double gamma, int bitDepth)
 	// {
