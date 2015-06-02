@@ -145,7 +145,7 @@ public class CTC_ImportImages_SCIFIO extends JEXPlugin {
 			DimensionMap baseMap = this.getMapFromPath(f.getAbsolutePath(), separator);
 			
 			// get reader for image file
-			final SCIFIO scifio = new SCIFIO(IJ2PluginUtility.ij.getContext());
+			final SCIFIO scifio = new SCIFIO(IJ2PluginUtility.ij().getContext());
 			Reader reader = null;
 			try
 			{
