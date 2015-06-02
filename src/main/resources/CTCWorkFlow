@@ -3,20 +3,20 @@
 @attribute 'Function Name' {'CTC - Adjust Image Intensities','CTC - Background Correct (Calibrated)','CTC - Crop Points','CTC - Export Data','CTC - Find Maxima Segmentation','CTC - Image Calculator','CTC - Image Filters','CTC - Import Images (SCIFIO)','CTC - Single Cell Colocalization','CTC - Split Image','CTC - Stitch 2 Dims Using Alignments','CTC - Threshold Background Noise'}
 @attribute 'Info Type' {__Inputs__,__Outputs__,__Parameters__,__SavingSelections__}
 @attribute Key {0,1,2,3,'Artificial BG Level','BG Sub. Paraboloid','BG Sub. Presmooth Radius','BG Sub. Radius','Cell Crops','Colocalization Data','Color Dim Name','Dim to Split','Est. BG sigma','Exclude Maximima on Edges?','Exclude Segments on Edges?','File Extension','File Name Parse Separator','Filter Type',Gamma,'Gather channel names?',Height,'Horizontal Image Alignment','IF-DF Radius',Image,'Image A','Image B','Image Col Dim Name','Image Row Dim Name','Image Set','Image to Quantify','Image-DF Radius',Images,'Input Directory/File','Intensity Multiplier','Is EDM?','Keep Dim?','Mask Image','Math Operation',Maxima,'Maxima Color Dim Value','Mean, median, or mode?','Median Filter Radius','Montage Cols','Montage Rows','New Max','New Min','Nominal Value to Add Back','Normalize Intensities Fit Bit Depth','Number of Sigma','Old Max','Old Min','Output Bit Depth','Output Bit-Depth','Output Maxima Only?','Particles Are White?','Pre-Despeckle Radius','Pre-Smoothing Radius','ROI (optional)',Radius,'Roi (Optional)',Scale,'Segmentation Color Dim Value','Segmented Image','Single Threshold per Color?',Threshold,Tolerance,'Vertical Image Alignment','Where to save...',Width}
-@attribute 'Workflow Index' {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}
+@attribute 'Workflow Index' {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}
 @attribute Metadata {Value}
 @attribute Value string
 
 @data
-'CTC - Adjust Image Intensities',__Inputs__,Image,12,Value,'Image,Segmented Image,0'
-'CTC - Adjust Image Intensities',__Outputs__,0,12,Value,'Image,Segmented Image (0-1),0'
-'CTC - Adjust Image Intensities',__Parameters__,Gamma,12,Value,1.0
-'CTC - Adjust Image Intensities',__Parameters__,'New Max',12,Value,1
-'CTC - Adjust Image Intensities',__Parameters__,'New Min',12,Value,0.0
-'CTC - Adjust Image Intensities',__Parameters__,'Old Max',12,Value,255
-'CTC - Adjust Image Intensities',__Parameters__,'Old Min',12,Value,0.0
-'CTC - Adjust Image Intensities',__Parameters__,'Output Bit Depth',12,Value,16
-'CTC - Adjust Image Intensities',__SavingSelections__,0,12,Value,true
+'CTC - Adjust Image Intensities',__Inputs__,Image,13,Value,'Image,Cell Area (Seg),0'
+'CTC - Adjust Image Intensities',__Outputs__,0,13,Value,'Image,Cell Area (Seg, 0-1),0'
+'CTC - Adjust Image Intensities',__Parameters__,Gamma,13,Value,1.0
+'CTC - Adjust Image Intensities',__Parameters__,'New Max',13,Value,1
+'CTC - Adjust Image Intensities',__Parameters__,'New Min',13,Value,0.0
+'CTC - Adjust Image Intensities',__Parameters__,'Old Max',13,Value,255
+'CTC - Adjust Image Intensities',__Parameters__,'Old Min',13,Value,0.0
+'CTC - Adjust Image Intensities',__Parameters__,'Output Bit Depth',13,Value,16
+'CTC - Adjust Image Intensities',__SavingSelections__,0,13,Value,true
 'CTC - Background Correct (Calibrated)',__Inputs__,Images,1,Value,'Image,RAW,0'
 'CTC - Background Correct (Calibrated)',__Outputs__,0,1,Value,'Image,RAW(BG),0'
 'CTC - Background Correct (Calibrated)',__Parameters__,'BG Sub. Paraboloid',1,Value,true
@@ -28,17 +28,17 @@
 'CTC - Background Correct (Calibrated)',__Parameters__,'Nominal Value to Add Back',1,Value,100
 'CTC - Background Correct (Calibrated)',__Parameters__,'Output Bit Depth',1,Value,16
 'CTC - Background Correct (Calibrated)',__SavingSelections__,0,1,Value,true
-'CTC - Crop Points',__Inputs__,Image,14,Value,'Image,FINAL (Seg),0'
-'CTC - Crop Points',__Inputs__,Maxima,14,Value,'Roi,Maxima,0'
-'CTC - Crop Points',__Outputs__,0,14,Value,'Image,CELL CROPS,0'
-'CTC - Crop Points',__Outputs__,1,14,Value,'Roi,CELL POINTS,0'
-'CTC - Crop Points',__Parameters__,Height,14,Value,50
-'CTC - Crop Points',__Parameters__,Width,14,Value,50
-'CTC - Crop Points',__SavingSelections__,0,14,Value,true
-'CTC - Crop Points',__SavingSelections__,1,14,Value,true
-'CTC - Export Data',__Inputs__,'Cell Crops',15,Value,'Image,CELL CROPS,0'
-'CTC - Export Data',__Inputs__,'Colocalization Data',15,Value,'File,Colocalization,0'
-'CTC - Export Data',__Parameters__,'Where to save...',15,Value,/Users/jaywarrick/Public/DropBox/GitHub/R-CTCApp
+'CTC - Crop Points',__Inputs__,Image,15,Value,'Image,FINAL (Seg),0'
+'CTC - Crop Points',__Inputs__,Maxima,15,Value,'Roi,Maxima,0'
+'CTC - Crop Points',__Outputs__,0,15,Value,'Image,CELL CROPS,0'
+'CTC - Crop Points',__Outputs__,1,15,Value,'Roi,CELL POINTS,0'
+'CTC - Crop Points',__Parameters__,Height,15,Value,50
+'CTC - Crop Points',__Parameters__,Width,15,Value,50
+'CTC - Crop Points',__SavingSelections__,0,15,Value,true
+'CTC - Crop Points',__SavingSelections__,1,15,Value,true
+'CTC - Export Data',__Inputs__,'Cell Crops',16,Value,'Image,CELL CROPS,0'
+'CTC - Export Data',__Inputs__,'Colocalization Data',16,Value,'File,Colocalization,0'
+'CTC - Export Data',__Parameters__,'Where to save...',16,Value,/Users/jaywarrick/Public/DropBox/GitHub/R-CTCApp
 'CTC - Find Maxima Segmentation',__Inputs__,Image,3,Value,'Image,FINAL,0'
 'CTC - Find Maxima Segmentation',__Inputs__,'ROI (optional)',3,Value,'Roi,Polygon 1,0'
 'CTC - Find Maxima Segmentation',__Outputs__,0,3,Value,'Roi,Maxima,0'
@@ -62,17 +62,23 @@
 'CTC - Find Maxima Segmentation',__SavingSelections__,2,3,Value,true
 'CTC - Find Maxima Segmentation',__SavingSelections__,3,3,Value,true
 'CTC - Image Calculator',__Inputs__,'Image A',10,Value,'Image,THRESH Color 1 (E,D),0'
-'CTC - Image Calculator',__Inputs__,'Image A',13,Value,'Image,FINAL,0'
+'CTC - Image Calculator',__Inputs__,'Image A',12,Value,'Image,Segmented Image,0'
+'CTC - Image Calculator',__Inputs__,'Image A',14,Value,'Image,FINAL,0'
 'CTC - Image Calculator',__Inputs__,'Image B',10,Value,'Image,THRESH Color 2 (E,D),0'
-'CTC - Image Calculator',__Inputs__,'Image B',13,Value,'Image,Segmented Image (0-1),0'
+'CTC - Image Calculator',__Inputs__,'Image B',12,Value,'Image,Cell Area,0'
+'CTC - Image Calculator',__Inputs__,'Image B',14,Value,'Image,Cell Area (Seg, 0-1),0'
 'CTC - Image Calculator',__Outputs__,0,10,Value,'Image,Cell Area,0'
-'CTC - Image Calculator',__Outputs__,0,13,Value,'Image,FINAL (Seg),0'
+'CTC - Image Calculator',__Outputs__,0,12,Value,'Image,Cell Area (Seg),0'
+'CTC - Image Calculator',__Outputs__,0,14,Value,'Image,FINAL (Seg),0'
 'CTC - Image Calculator',__Parameters__,'Math Operation',10,Value,OR
-'CTC - Image Calculator',__Parameters__,'Math Operation',13,Value,A*B
+'CTC - Image Calculator',__Parameters__,'Math Operation',12,Value,AND
+'CTC - Image Calculator',__Parameters__,'Math Operation',14,Value,A*B
 'CTC - Image Calculator',__Parameters__,'Output Bit-Depth',10,Value,8
-'CTC - Image Calculator',__Parameters__,'Output Bit-Depth',13,Value,16
+'CTC - Image Calculator',__Parameters__,'Output Bit-Depth',12,Value,8
+'CTC - Image Calculator',__Parameters__,'Output Bit-Depth',14,Value,16
 'CTC - Image Calculator',__SavingSelections__,0,10,Value,true
-'CTC - Image Calculator',__SavingSelections__,0,13,Value,true
+'CTC - Image Calculator',__SavingSelections__,0,12,Value,true
+'CTC - Image Calculator',__SavingSelections__,0,14,Value,true
 'CTC - Image Filters',__Inputs__,Image,6,Value,'Image,THRESH Time 1,0'
 'CTC - Image Filters',__Inputs__,Image,7,Value,'Image,THRESH Color 1 (E),0'
 'CTC - Image Filters',__Inputs__,Image,8,Value,'Image,THRESH Time 2,0'
