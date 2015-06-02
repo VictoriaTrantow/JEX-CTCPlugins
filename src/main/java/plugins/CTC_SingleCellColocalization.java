@@ -381,25 +381,21 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 					// Use each signal as a window on the other and calculate the window fraction
 					Pair<Double,Double> frac12 = null, frac21 = null;
 					
-					if(method.equals("Max-Norm"))
-					{
-						frac12 = StatisticsUtility.windowFraction3(StatisticsUtility.add(-bg, m1), StatisticsUtility.add(-bg, m2));
-						frac21 = StatisticsUtility.windowFraction3(StatisticsUtility.add(-bg, m2), StatisticsUtility.add(-bg, m1));
-					}
-					else
-					{
-						frac12 = StatisticsUtility.windowFraction(StatisticsUtility.add(-bg, m1), StatisticsUtility.add(-bg, m2), offset);
-						frac21 = StatisticsUtility.windowFraction(StatisticsUtility.add(-bg, m2), StatisticsUtility.add(-bg, m1), offset);
-					}
+					frac12 = windowFraction3(StatisticsUtility.add(-bg, m1), StatisticsUtility.add(-bg, m2));
+					frac21 = windowFraction3(StatisticsUtility.add(-bg, m2), StatisticsUtility.add(-bg, m1));
 					
 					DimensionMap toSave = map.copy();
 					toSave.put("Id", "" + p.id);
-					toSave.put("Measurement", "Sig_" + colors.get("1") + colors.get("2") + "_Tot");
+					toSave.put("Measurement", "Sig_" + colors.get("1") + "_Tot"); // Overwrite of duplicate info is ok. Could be more efficient but this is easy.
 					results.put(toSave.copy(), frac12.p1);
+					toSave.put("Measurement", "Sig_" + colors.get("1") + "_Mean"); // Overwrite of duplicate info is ok. Could be more efficient but this is easy.
+					results.put(toSave.copy(), frac12.p1 / ((double) m1.size()));
 					toSave.put("Measurement", "Sig_" + colors.get("1") + colors.get("2") + "_Window");
 					results.put(toSave.copy(), frac12.p2);
-					toSave.put("Measurement", "Sig_" + colors.get("2") + colors.get("1") + "_Tot");
+					toSave.put("Measurement", "Sig_" + colors.get("2") + "_Tot"); // Overwrite of duplicate info is ok. Could be more efficient but this is easy.
 					results.put(toSave.copy(), frac21.p1);
+					toSave.put("Measurement", "Sig_" + colors.get("2") + "_Mean"); // Overwrite of duplicate info is ok. Could be more efficient but this is easy.
+					results.put(toSave.copy(), frac21.p1 / ((double) m1.size()));
 					toSave.put("Measurement", "Sig_" + colors.get("2") + colors.get("1") + "_Window");
 					results.put(toSave.copy(), frac21.p2);
 					toSave.put("Measurement", "n");
@@ -518,26 +514,44 @@ public class CTC_SingleCellColocalization extends JEXPlugin {
 		return data;
 	}
 	
-	// private String saveAdjustedImage(String imagePath, double oldMin, double
-	// oldMax, double newMin, double newMax, double gamma, int bitDepth)
-	// {
-	// // Get image data
-	// File f = new File(imagePath);
-	// if(!f.exists()) return null;
-	// ImagePlus im = new ImagePlus(imagePath);
-	// FloatProcessor imp = (FloatProcessor) im.getProcessor().convertToFloat();
-	// // should be a float processor
-	//
-	// // Adjust the image
-	// FunctionUtility.imAdjust(imp, oldMin, oldMax, newMin, newMax, gamma);
-	//
-	// // Save the results
-	// ImagePlus toSave = FunctionUtility.makeImageToSave(imp, "false",
-	// bitDepth);
-	// String imPath = JEXWriter.saveImage(toSave);
-	// im.flush();
-	//
-	// // return temp filePath
-	// return imPath;
-	// }
+	/**
+	 * Based on windowFraction2 but returns sum of signal and fraction (instead of sum and fraction*sum)
+	 * @param sig
+	 * @param window
+	 * @return
+	 */
+	public static Pair<Double,Double> windowFraction3(double[] sig, double[] window)
+	{
+		double[] truncSig = new double[sig.length];
+		double[] truncWindow = new double[window.length];
+		for (int i = 0; i < sig.length; i++)
+		{
+			if(sig[i] < 0)
+			{
+				truncSig[i] = 0.0;
+			}
+			else
+			{
+				truncSig[i] = sig[i];
+			}
+			if(window[i] < 0)
+			{
+				truncWindow[i] = 0.0;
+			}
+			else
+			{
+				truncWindow[i] = window[i];
+			}
+		}
+		double[] sigNorm = StatisticsUtility.multiply(truncSig, 1 / StatisticsUtility.max(truncSig));
+		double[] windowNorm = StatisticsUtility.multiply(truncWindow, 1 / StatisticsUtility.max(truncWindow));
+		double[] min = StatisticsUtility.min(sigNorm, windowNorm);
+		double frac = StatisticsUtility.sum(min) / StatisticsUtility.sum(sigNorm);
+		double sum = StatisticsUtility.sum(sig);
+		
+		// Return the total signal and the portion of the signal within the window
+		Pair<Double,Double> ret = new Pair<Double,Double>(sum, frac);
+		
+		return ret;
+	}
 }
