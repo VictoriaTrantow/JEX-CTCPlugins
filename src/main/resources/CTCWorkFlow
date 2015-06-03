@@ -1,8 +1,8 @@
 @relation Workflow-/Users/jaywarrick/Public/DropBox/GitHub/JEX-CTCPlugins/src/main/resources/CTCWorkFlow
 
-@attribute 'Function Name' {'CTC - Adjust Image Intensities','CTC - Background Correct (Calibrated)','CTC - Crop Points','CTC - Export Data','CTC - Find Maxima Segmentation','CTC - Image Calculator','CTC - Image Filters','CTC - Import Images (SCIFIO)','CTC - Single Cell Colocalization','CTC - Split Image','CTC - Stitch 2 Dims Using Alignments','CTC - Threshold Background Noise'}
+@attribute 'Function Name' {'CTC - Adjust Image Intensities','CTC - Crop Points','CTC - Export Data','CTC - Fast Median Background Subtraction','CTC - Find Maxima Segmentation','CTC - Image Calculator','CTC - Image Filters','CTC - Import Images (SCIFIO)','CTC - Single Cell Colocalization','CTC - Split Image','CTC - Stitch 2 Dims Using Alignments','CTC - Threshold Background Noise'}
 @attribute 'Info Type' {__Inputs__,__Outputs__,__Parameters__,__SavingSelections__}
-@attribute Key {0,1,2,3,'Artificial BG Level','BG Sub. Paraboloid','BG Sub. Presmooth Radius','BG Sub. Radius','Cell Crops','Colocalization Data','Color Dim Name','Dim to Split','Est. BG sigma','Exclude Maximima on Edges?','Exclude Segments on Edges?','File Extension','File Name Parse Separator','Filter Type',Gamma,'Gather channel names?',Height,'Horizontal Image Alignment','IF-DF Radius',Image,'Image A','Image B','Image Col Dim Name','Image Row Dim Name','Image Set','Image to Quantify','Image-DF Radius',Images,'Input Directory/File','Intensity Multiplier','Is EDM?','Keep Dim?','Mask Image','Math Operation',Maxima,'Maxima Color Dim Value','Mean, median, or mode?','Median Filter Radius','Montage Cols','Montage Rows','New Max','New Min','Nominal Value to Add Back','Normalize Intensities Fit Bit Depth','Number of Sigma','Old Max','Old Min','Output Bit Depth','Output Bit-Depth','Output Maxima Only?','Particles Are White?','Pre-Despeckle Radius','Pre-Smoothing Radius','ROI (optional)',Radius,'Roi (Optional)',Scale,'Segmentation Color Dim Value','Segmented Image','Single Threshold per Color?',Threshold,Tolerance,'Vertical Image Alignment','Where to save...',Width}
+@attribute Key {0,1,2,3,'Artificial BG Level','Cell Crops','Colocalization Data','Color Dim Name','Dim to Split','Exclude Maximima on Edges?','Exclude Segments on Edges?','File Extension','File Name Parse Separator','Filter Type',Gamma,'Gather channel names?',Height,'Horizontal Image Alignment',Image,'Image A','Image B','Image Col Dim Name','Image Row Dim Name','Image Set','Image to Quantify','Input Directory/File','Intensity Multiplier','Is EDM?','Keep Dim?','Kernal Width','Mask Image','Math Operation',Maxima,'Maxima Color Dim Value','Mean, median, or mode?','Median Filter Radius','Montage Cols','Montage Rows','New Max','New Min','Nominal Value to Add Back','Normalize Intensities Fit Bit Depth','Number of Sigma','Old Max','Old Min','Output Bit Depth','Output Bit-Depth','Output Maxima Only?','Particles Are White?','Pre-Despeckle Radius','Pre-Smoothing Radius','ROI (optional)',Radius,'Roi (Optional)',Scale,'Segmentation Color Dim Value','Segmented Image','Single Threshold per Color?',Threshold,Tolerance,'Vertical Image Alignment','Where to save...',Width}
 @attribute 'Workflow Index' {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16}
 @attribute Metadata {Value}
 @attribute Value string
@@ -17,17 +17,6 @@
 'CTC - Adjust Image Intensities',__Parameters__,'Old Min',13,Value,0.0
 'CTC - Adjust Image Intensities',__Parameters__,'Output Bit Depth',13,Value,16
 'CTC - Adjust Image Intensities',__SavingSelections__,0,13,Value,true
-'CTC - Background Correct (Calibrated)',__Inputs__,Images,1,Value,'Image,RAW,0'
-'CTC - Background Correct (Calibrated)',__Outputs__,0,1,Value,'Image,RAW(BG),0'
-'CTC - Background Correct (Calibrated)',__Parameters__,'BG Sub. Paraboloid',1,Value,true
-'CTC - Background Correct (Calibrated)',__Parameters__,'BG Sub. Presmooth Radius',1,Value,3
-'CTC - Background Correct (Calibrated)',__Parameters__,'BG Sub. Radius',1,Value,3
-'CTC - Background Correct (Calibrated)',__Parameters__,'Est. BG sigma',1,Value,50
-'CTC - Background Correct (Calibrated)',__Parameters__,'IF-DF Radius',1,Value,0
-'CTC - Background Correct (Calibrated)',__Parameters__,'Image-DF Radius',1,Value,0
-'CTC - Background Correct (Calibrated)',__Parameters__,'Nominal Value to Add Back',1,Value,100
-'CTC - Background Correct (Calibrated)',__Parameters__,'Output Bit Depth',1,Value,16
-'CTC - Background Correct (Calibrated)',__SavingSelections__,0,1,Value,true
 'CTC - Crop Points',__Inputs__,Image,15,Value,'Image,FINAL (Seg),0'
 'CTC - Crop Points',__Inputs__,Maxima,15,Value,'Roi,Maxima,0'
 'CTC - Crop Points',__Outputs__,0,15,Value,'Image,CELL CROPS,0'
@@ -39,6 +28,11 @@
 'CTC - Export Data',__Inputs__,'Cell Crops',16,Value,'Image,CELL CROPS,0'
 'CTC - Export Data',__Inputs__,'Colocalization Data',16,Value,'File,Colocalization,0'
 'CTC - Export Data',__Parameters__,'Where to save...',16,Value,/Users/jaywarrick/Public/DropBox/GitHub/R-CTCApp
+'CTC - Fast Median Background Subtraction',__Inputs__,Image,1,Value,'Image,RAW,0'
+'CTC - Fast Median Background Subtraction',__Outputs__,0,1,Value,'Image,RAW(BG),0'
+'CTC - Fast Median Background Subtraction',__Parameters__,'Kernal Width',1,Value,50
+'CTC - Fast Median Background Subtraction',__Parameters__,'Nominal Value to Add Back',1,Value,500
+'CTC - Fast Median Background Subtraction',__SavingSelections__,0,1,Value,true
 'CTC - Find Maxima Segmentation',__Inputs__,Image,3,Value,'Image,FINAL,0'
 'CTC - Find Maxima Segmentation',__Inputs__,'ROI (optional)',3,Value,'Roi,Polygon 1,0'
 'CTC - Find Maxima Segmentation',__Outputs__,0,3,Value,'Roi,Maxima,0'
@@ -127,8 +121,8 @@
 'CTC - Stitch 2 Dims Using Alignments',__Inputs__,'Image Set',2,Value,'Image,RAW(BG),0'
 'CTC - Stitch 2 Dims Using Alignments',__Inputs__,'Vertical Image Alignment',2,Value,'Value,V-Alignment,0'
 'CTC - Stitch 2 Dims Using Alignments',__Outputs__,0,2,Value,'Image,FINAL,0'
-'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Image Col Dim Name',2,Value,ImCol
-'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Image Row Dim Name',2,Value,ImRow
+'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Image Col Dim Name',2,Value,x
+'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Image Row Dim Name',2,Value,y
 'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Intensity Multiplier',2,Value,1
 'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Normalize Intensities Fit Bit Depth',2,Value,false
 'CTC - Stitch 2 Dims Using Alignments',__Parameters__,'Output Bit Depth',2,Value,16
@@ -139,10 +133,10 @@
 'CTC - Threshold Background Noise',__Outputs__,0,4,Value,'Image,THRESH,0'
 'CTC - Threshold Background Noise',__Outputs__,1,4,Value,'File,Thresholds,0'
 'CTC - Threshold Background Noise',__Outputs__,2,4,Value,'File,Thresholds,0'
-'CTC - Threshold Background Noise',__Parameters__,'Color Dim Name',4,Value,Color
+'CTC - Threshold Background Noise',__Parameters__,'Color Dim Name',4,Value,Time
 'CTC - Threshold Background Noise',__Parameters__,'Mean, median, or mode?',4,Value,Mode
-'CTC - Threshold Background Noise',__Parameters__,'Number of Sigma',4,Value,4
-'CTC - Threshold Background Noise',__Parameters__,'Single Threshold per Color?',4,Value,false
+'CTC - Threshold Background Noise',__Parameters__,'Number of Sigma',4,Value,5
+'CTC - Threshold Background Noise',__Parameters__,'Single Threshold per Color?',4,Value,true
 'CTC - Threshold Background Noise',__SavingSelections__,0,4,Value,true
 'CTC - Threshold Background Noise',__SavingSelections__,1,4,Value,true
 'CTC - Threshold Background Noise',__SavingSelections__,2,4,Value,true
