@@ -110,7 +110,7 @@
 'CTC - Single Cell Colocalization',__Inputs__,Maxima,11,Value,'Roi,Maxima,0'
 'CTC - Single Cell Colocalization',__Inputs__,'Segmented Image',11,Value,'Image,Segmented Image,0'
 'CTC - Single Cell Colocalization',__Outputs__,0,11,Value,'File,Colocalization,0'
-'CTC - Single Cell Colocalization',__Parameters__,'Artificial BG Level',11,Value,100
+'CTC - Single Cell Colocalization',__Parameters__,'Artificial BG Level',11,Value,500
 'CTC - Single Cell Colocalization',__Parameters__,'Color Dim Name',11,Value,Time
 'CTC - Single Cell Colocalization',__Parameters__,'Median Filter Radius',11,Value,1
 'CTC - Single Cell Colocalization',__SavingSelections__,0,11,Value,true
