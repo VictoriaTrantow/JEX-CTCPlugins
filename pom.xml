@@ -4,11 +4,11 @@
 	<parent>
 		<groupId>io.github.jaywarrick</groupId>
 		<artifactId>pom-jex</artifactId>
-		<version>0.0.8-SNAPSHOT</version>
+		<version>0.0.8</version>
 	</parent>
 
 	<artifactId>pom-ctc</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 	
 	<name>JEX plugins for CTC Image Analysis</name>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>io.github.jaywarrick</groupId>
 			<artifactId>JEX</artifactId>
-			<version>0.0.8-SNAPSHOT</version>
+			<version>0.0.8</version>
 		</dependency>
 	</dependencies>
 	
