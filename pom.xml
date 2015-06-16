@@ -8,7 +8,7 @@
 	</parent>
 
 	<artifactId>pom-ctc</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.2</version>
 	<packaging>jar</packaging>
 	
 	<name>JEX plugins for CTC Image Analysis</name>
