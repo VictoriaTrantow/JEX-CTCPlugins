@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>io.github.jaywarrick</groupId>
 		<artifactId>pom-jex</artifactId>
-		<version>0.0.8</version>
+		<version>0.0.9</version>
 	</parent>
 
 	<artifactId>pom-ctc</artifactId>
@@ -35,7 +35,7 @@
 		<dependency>
 			<groupId>io.github.jaywarrick</groupId>
 			<artifactId>JEX</artifactId>
-			<version>0.0.8</version>
+			<version>0.0.9</version>
 		</dependency>
 	</dependencies>
 	
