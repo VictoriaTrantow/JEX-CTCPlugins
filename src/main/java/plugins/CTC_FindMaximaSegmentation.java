@@ -309,6 +309,13 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 				}
 				outputRoiMap.put(tempMap, newRoip);
 				
+				// // Count the maxima
+				outputCountMap.put(map, (double) filteredPoints.size());
+				
+				// // Create the file of XY locations
+				String listPath = createXYPointListFile(filteredPoints);
+				outputFileMap.put(map, listPath);
+				
 				if(!maximaOnly)
 				{
 					// // Create the segemented image
@@ -398,13 +405,6 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 						outputImageMap.put(tempMap, segmentedImagePath);
 					}
 					
-					// // Count the maxima
-					outputCountMap.put(map, (double) filteredPoints.size());
-					
-					// // Create the file of XY locations
-					String listPath = createXYPointListFile(filteredPoints);
-					outputFileMap.put(map, listPath);
-					
 				}
 				
 				// // Update the display
@@ -424,11 +424,12 @@ public class CTC_FindMaximaSegmentation extends JEXPlugin {
 			// roi, file file(value), image
 			output0 = RoiWriter.makeRoiObject("Maxima", outputRoiMap);
 			
+			output1 = FileWriter.makeFileObject("XY List", null, outputFileMap);
+			String countsFile = JEXTableWriter.writeTable("Counts", outputCountMap, "arff");
+			output2 = FileWriter.makeFileObject("Counts", null, countsFile);
+			
 			if(!maximaOnly)
 			{
-				output1 = FileWriter.makeFileObject("XY List", null, outputFileMap);
-				String countsFile = JEXTableWriter.writeTable("Counts", outputCountMap, "arff");
-				output2 = FileWriter.makeFileObject("Counts", null, countsFile);
 				output3 = ImageWriter.makeImageStackFromPaths("Segmented Image", outputImageMap);
 
 			}
